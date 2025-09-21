@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* 글자 단위 stagger 애니메이션 */
+@keyframes charFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+svg .char {
+  opacity: 0;
+  animation: charFadeUp 600ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  svg .char { animation: none; opacity: 1; transform: none; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.scroll-indicator {
+  opacity: 0;
+  animation: fadeIn 800ms ease-out forwards;
+  animation-delay: 1s; /* 1초 뒤에 나타남 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-indicator { animation: none; opacity: 1; }
+}
