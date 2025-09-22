@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
-/** 배열/객체 모두 지원하도록 sources 정규화 */
 function normalizeSources(sources) {
   if (!sources) return [];
   if (Array.isArray(sources)) return sources;
@@ -19,11 +18,12 @@ export default function ResponsivePicture({
   picture,
   alt,
   sizes = "100vw",
-  className,
-  // 'high' | 'low' | 'auto'
+  className,         // <picture> 용
+  imgClassName,      // <img> 용 (신규)
   fetchPriority = "auto",
   loading = "lazy",
   decoding = "async",
+  fit = "cover",     // "cover" | "longer-side"
 }) {
   if (!picture) return null;
 
@@ -32,17 +32,45 @@ export default function ResponsivePicture({
   if (!img.src) return null;
 
   const imgRef = useRef(null);
+  const [isPortraitViewport, setIsPortraitViewport] = useState(
+    window.innerHeight > window.innerWidth
+  );
 
-  // ⚠️ React 경고 없이 DOM 속성으로만 세팅
+  // fetchpriority: 경고 없이 DOM 속성으로만 세팅
   useEffect(() => {
     const el = imgRef.current;
     if (!el) return;
     if (fetchPriority && fetchPriority !== "auto") {
-      el.setAttribute("fetchpriority", fetchPriority); // 'high' | 'low'
+      el.setAttribute("fetchpriority", fetchPriority);
     } else {
       el.removeAttribute("fetchpriority");
     }
   }, [fetchPriority]);
+
+  // 뷰포트 긴 축 기준 모드
+  useEffect(() => {
+    if (fit !== "longer-side") return;
+    const onResize = () => {
+      setIsPortraitViewport(window.innerHeight > window.innerWidth);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("orientationchange", onResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+    };
+  }, [fit]);
+
+  const imgStyle = useMemo(() => {
+    if (fit === "longer-side") {
+      // 긴 축 기준: 포트레이트면 세로 100dvh, 랜드스케이프면 가로 100vw
+      return isPortraitViewport
+        ? { height: "100dvh", width: "auto", objectFit: "cover", objectPosition: "center" }
+        : { width: "100vw", height: "auto", objectFit: "cover", objectPosition: "center" };
+    }
+    // 기본 cover 모드: 부모가 사이즈를 책임지고, 이미지는 가득 채움
+    return { width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" };
+  }, [fit, isPortraitViewport]);
 
   return (
     <picture className={className}>
@@ -59,7 +87,8 @@ export default function ResponsivePicture({
         alt={alt}
         loading={loading}
         decoding={decoding}
-        style={{ width: "100%", height: "auto" }}
+        className={imgClassName}
+        style={imgStyle}
       />
     </picture>
   );

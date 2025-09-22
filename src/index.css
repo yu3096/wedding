@@ -34,3 +34,12 @@ svg .char {
 @media (prefers-reduced-motion: reduce) {
   .scroll-indicator { animation: none; opacity: 1; }
 }
+
+/* 뷰포트 꽉 채우는 래퍼 */
+.hero-fullbleed { min-height: 100dvh; }
+@supports (min-height: 100svh) {
+  .hero-fullbleed { min-height: 100svh; }
+}
+/* 최후 폴백: --vh 사용 중이면 함께 둡니다
+.hero-fullbleed { min-height: calc(var(--vh, 1vh) * 100); }
+*/
