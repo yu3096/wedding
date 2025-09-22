@@ -1,21 +1,22 @@
 import React from "react";
-import SvgStaggerText from "./SvgStaggerText";
-import ResponsivePicture from './media/ResponsivePicture';
-import heroPic from '@/assets/images/hero.jpg?format=avif;webp;jpg&w=480;768;1024;1440;1920&quality=70&as=picture';
+import SvgStaggerText from "@/components/SvgStaggerText";
+import ResponsivePicture from "@/components/media/ResponsivePicture";
+import heroPic from '@/assets/images/hero.jpg?w=480;768;1024;1440;1920&format=avif;webp;jpg&quality=70&as=picture';
 
 export default function HeroFullBleed() {
   return (
-    <header className="relative w-full h-screen overflow-hidden">
-{/*       <img src={hero} alt="hero" className="absolute inset-0 h-full w-full object-cover" /> */}
+    <header className="hero-fullbleed relative bg-black overflow-hidden">
       <ResponsivePicture
-        picture={heroPic}
-        alt="Hero background"
-        sizes="100vw"              // 화면 전체 폭
-        fetchPriority="high"       // LCP 최적화
-        loading="eager"
-        decoding="async"
-        className="block"
-      />
+          picture={heroPic}
+          alt="Hero background"
+          sizes="100vw"
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0"                       // <picture> 위치
+          imgClassName="block mx-auto"                      // <img> 추가 클래스(중앙 정렬 등)
+          fit="longer-side"                                 // ✅ 긴 축 기준
+        />
       <div className="absolute inset-0 bg-black/30" />
 
       <svg
