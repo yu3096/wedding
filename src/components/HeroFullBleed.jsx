@@ -14,8 +14,8 @@ export default function HeroFullBleed() {
           loading="eager"
           decoding="async"
           className="absolute inset-0"                       // <picture> 위치
-          imgClassName="block mx-auto"                      // <img> 추가 클래스(중앙 정렬 등)
-          fit="longer-side"                                 // ✅ 긴 축 기준
+          imgClassName="w-full h-full object-cover block"                      // <img> 추가 클래스(중앙 정렬 등)
+          fit="cover"                                 // ✅ 긴 축 기준
         />
       <div className="absolute inset-0 bg-black/30" />
 
