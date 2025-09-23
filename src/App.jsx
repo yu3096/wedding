@@ -9,7 +9,7 @@ import Gallery from '@/components/Gallery.jsx'
 import Maps from '@/components/Maps.jsx'
 import Transport from '@/components/Transport.jsx'
 import Footer from '@/components/Footer.jsx'
-import GuestBook from '@/components/GuestBook.jsx'
+import Guestbook from '@/components/Guestbook.jsx'
 import Appreciation from '@/components/Appreciation.jsx'
 
 export default function App() {
@@ -25,7 +25,7 @@ export default function App() {
       <Gallery />
       <Maps />
       <Transport />
-      <GuestBook />
+      <Guestbook />
       <Appreciation />
       <Footer />
     </div>
