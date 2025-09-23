@@ -1,11 +1,11 @@
 // Guestbook.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase.js";
 import { getDeviceId, getDeleteToken } from "@/lib/device.js";
 
 const MAX_LEN = 300;
 const PAGE = 20;
-const deviceId = getDeviceId();          // 같은 기기에서만 삭제 버튼 노출용(클라이언트 가드)
+const deviceId = getDeviceId();          // 같은 기기 기준 처리
 const deleteToken = getDeleteToken();
 
 export default function GuestbookSupabase() {
@@ -16,12 +16,23 @@ export default function GuestbookSupabase() {
   const [page, setPage] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
+  // ❤️ 좋아요 상태
+  const [likesCount, setLikesCount] = useState({}); // { [message_id]: number }
+  const [likedSet, setLikedSet] = useState(new Set()); // 이 기기에서 좋아요 누른 message_id 집합
+
+  const currentIds = useMemo(() => list.map((x) => x.id), [list]);
+
+  useEffect(() => {
+    fetchPage(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function fetchPage(p = 0) {
     setLoading(true);
     const from = p * PAGE;
     const to = from + PAGE - 1;
 
-    // soft delete 반영: 활성 글만
+    // 활성 글만
     const { data, error } = await supabase
       .from("guestbook")
       .select("id,name,message,created_at,device_id,delete_yn")
@@ -32,14 +43,55 @@ export default function GuestbookSupabase() {
     if (error) {
       console.error("[guestbook select error]", error);
     }
-    setList(p === 0 ? (data || []) : [...list, ...(data || [])]);
+
+    const merged = p === 0 ? (data || []) : [...list, ...(data || [])];
+    setList(merged);
     setLoading(false);
+
+    const ids = (data || []).map((x) => x.id);
+    if (ids.length > 0) {
+      await Promise.all([fetchLikesFor(ids), fetchMyLikesFor(ids)]);
+    }
   }
 
-  useEffect(() => {
-    fetchPage(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // 특정 메시지들의 좋아요 개수 로드
+  async function fetchLikesFor(ids) {
+    const { data, error } = await supabase
+      .from("guestbook_likes")
+      .select("message_id")
+      .in("message_id", ids);
+
+    if (error) {
+      console.error("[likes count select error]", error);
+      return;
+    }
+    const map = {};
+    for (const row of data) {
+      map[row.message_id] = (map[row.message_id] || 0) + 1;
+    }
+    setLikesCount((prev) => ({ ...prev, ...map }));
+  }
+
+  // 이 기기가 누른 좋아요 로드
+  async function fetchMyLikesFor(ids) {
+    const { data, error } = await supabase
+      .from("guestbook_likes")
+      .select("message_id")
+      .eq("device_id", deviceId)
+      .in("message_id", ids);
+
+    if (error) {
+      console.error("[my likes select error]", error);
+      return;
+    }
+    if (data?.length) {
+      setLikedSet((prev) => {
+        const next = new Set(prev);
+        data.forEach((r) => next.add(r.message_id));
+        return next;
+      });
+    }
+  }
 
   async function submit(e) {
     e.preventDefault();
@@ -51,7 +103,7 @@ export default function GuestbookSupabase() {
     setSubmitting(true);
     const now = new Date().toISOString();
 
-    // 낙관적 업데이트 (delete_yn 기본 'n')
+    // 낙관적 업데이트
     const optimistic = {
       id: `temp-${now}`,
       name: nameTrim.slice(0, 40),
@@ -84,19 +136,18 @@ export default function GuestbookSupabase() {
       });
       alert(`등록 실패: ${error.message}`);
     } else if (data) {
-      // 서버 값으로 교체
+      // 서버 값으로 교체 + 초기 좋아요 0
       setList((prev) => [data, ...prev.filter((x) => x.id !== optimistic.id)]);
+      setLikesCount((prev) => ({ ...prev, [data.id]: 0 }));
       setName("");
       setMessage("");
     }
     setSubmitting(false);
   }
 
-  // ✅ soft delete: delete_yn='y'로 업데이트하고 목록에서 제거 (반환 없음)
+  // ✅ soft delete: delete_yn='y' (반환 없음)
   async function softDelete(row) {
-    // 같은 디바이스만 가드
     if (row.device_id !== deviceId) return;
-
     const { error } = await supabase
       .from("guestbook")
       .update({ delete_yn: "y" }, { returning: "minimal" })
@@ -107,6 +158,74 @@ export default function GuestbookSupabase() {
       alert(`삭제 실패: ${error.message}`);
     } else {
       setList((prev) => prev.filter((x) => x.id !== row.id));
+      // 좋아요 상태도 정리
+      setLikedSet((prev) => {
+        const next = new Set(prev);
+        next.delete(row.id);
+        return next;
+      });
+      setLikesCount((prev) => {
+        const { [row.id]: _, ...rest } = prev;
+        return rest;
+      });
+    }
+  }
+
+  // ❤️ 좋아요 토글 (좋아요 누르기/취소)
+  async function toggleLike(messageId) {
+    const liked = likedSet.has(messageId);
+
+    if (!liked) {
+      // 좋아요 추가 (낙관적 반영)
+      setLikedSet((prev) => new Set(prev).add(messageId));
+      setLikesCount((prev) => ({ ...prev, [messageId]: (prev[messageId] || 0) + 1 }));
+
+      const { error } = await supabase
+        .from("guestbook_likes")
+        .insert({ message_id: messageId, device_id: deviceId });
+
+      if (error) {
+        // 유니크 충돌은 무시, 그 외 롤백
+        if (error.code !== "23505") {
+          setLikedSet((prev) => {
+            const next = new Set(prev);
+            next.delete(messageId);
+            return next;
+          });
+          setLikesCount((prev) => ({
+            ...prev,
+            [messageId]: Math.max(0, (prev[messageId] || 1) - 1),
+          }));
+          console.error("[like insert error]", error);
+          alert(`좋아요 실패: ${error.message}`);
+        }
+      }
+    } else {
+      // 좋아요 취소 (낙관적 반영)
+      setLikedSet((prev) => {
+        const next = new Set(prev);
+        next.delete(messageId);
+        return next;
+      });
+      setLikesCount((prev) => ({
+        ...prev,
+        [messageId]: Math.max(0, (prev[messageId] || 1) - 1),
+      }));
+
+      // ✅ 내 기기의 좋아요만 지운다 (RLS는 널널하므로 클라에서 반드시 제한)
+      const { error } = await supabase
+        .from("guestbook_likes")
+        .delete()
+        .eq("message_id", messageId)
+        .eq("device_id", deviceId);
+
+      if (error) {
+        // 실패 시 원복
+        setLikedSet((prev) => new Set(prev).add(messageId));
+        setLikesCount((prev) => ({ ...prev, [messageId]: (prev[messageId] || 0) + 1 }));
+        console.error("[like delete error]", error);
+        alert(`좋아요 취소 실패: ${error.message}`);
+      }
     }
   }
 
@@ -115,7 +234,7 @@ export default function GuestbookSupabase() {
       <h2 className="text-2xl sm:text-3xl font-serif text-center">방명록</h2>
       <p className="text-center text-neutral-600 mt-2">축하 메시지를 남겨주세요 ☺️</p>
 
-      {/* 입력 폼: 모바일 가독/터치영역 강화 */}
+      {/* 입력 폼 */}
       <form
         onSubmit={submit}
         className="mt-6 rounded-2xl border p-4 sm:p-5 bg-white/70 backdrop-blur space-y-3"
@@ -154,47 +273,67 @@ export default function GuestbookSupabase() {
 
       {/* 목록 */}
       <ul className="mt-6 space-y-4">
-        {list.map((e) => (
-          <li key={e.id} className="rounded-2xl border bg-white/90 p-4 sm:p-5 shadow-sm">
-            {/* 상단: 아바타 + 이름 + 타임스탬프 + 삭제 */}
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3 min-w-0">
-                {/* 이니셜 아바타 */}
-                <div className="shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-neutral-100 flex items-center justify-center text-sm font-semibold">
-                  {(e.name || "?").trim().slice(0, 2).toUpperCase()}
+        {list.map((e) => {
+          const liked = likedSet.has(e.id);
+          const count = likesCount[e.id] || 0;
+
+          return (
+            <li key={e.id} className="rounded-2xl border bg-white/90 p-4 sm:p-5 shadow-sm">
+              {/* 상단: 아바타 + 이름 + 타임스탬프 + 좋아요/삭제 */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-neutral-100 flex items-center justify-center text-sm font-semibold">
+                    {(e.name || "?").trim().slice(0, 2).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-semibold text-[15px] sm:text-base leading-5 truncate">
+                      {e.name}
+                    </div>
+                    <div className="text-[11px] sm:text-xs text-neutral-500">
+                      {new Date(e.created_at).toLocaleString()}
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="font-semibold text-[15px] sm:text-base leading-5 truncate">
-                    {e.name}
-                  </div>
-                  <div className="text-[11px] sm:text-xs text-neutral-500">
-                    {new Date(e.created_at).toLocaleString()}
-                  </div>
+
+                <div className="flex items-center gap-2">
+                  {/* ❤️ 좋아요 토글 */}
+                  <button
+                    type="button"
+                    onClick={() => toggleLike(e.id)}
+                    className={`h-7 px-2.5 rounded-full border text-xs active:scale-[0.98] transition
+                      ${liked ? "bg-rose-50 border-rose-200 text-rose-500" : "hover:bg-neutral-50 text-neutral-600"}`}
+                    aria-pressed={liked}
+                    aria-label={liked ? "좋아요 취소" : "좋아요"}
+                    title={liked ? "좋아요 취소" : "좋아요"}
+                  >
+                    <span className="mr-1" aria-hidden>{liked ? "❤️" : "❤️"}</span>
+                    <span>{count}</span>
+                  </button>
+
+                  {/* 같은 디바이스만 삭제 */}
+                  {e.device_id === deviceId && (
+                    <button
+                      className="shrink-0 h-7 px-3 rounded-full border text-xs text-neutral-600 hover:bg-neutral-50 active:scale-[0.98] transition"
+                      onClick={() => softDelete(e)}
+                      aria-label="메시지 삭제"
+                      type="button"
+                    >
+                      삭제
+                    </button>
+                  )}
                 </div>
               </div>
 
-              {/* 같은 디바이스만 삭제 버튼 */}
-              {e.device_id === deviceId && (
-                <button
-                  className="shrink-0 h-7 px-3 rounded-full border text-xs text-neutral-600 hover:bg-neutral-50 active:scale-[0.98] transition"
-                  onClick={() => softDelete(e)}
-                  aria-label="메시지 삭제"
-                  type="button"
-                >
-                  삭제
-                </button>
-              )}
-            </div>
-
-            {/* 본문: 긴 단어/URL/이모지 대응 */}
-            <p
-              className="mt-3 sm:mt-4 text-[15px] sm:text-base leading-relaxed whitespace-pre-wrap break-words"
-              style={{ hyphens: "auto", overflowWrap: "anywhere", wordBreak: "break-word" }}
-            >
-              {e.message}
-            </p>
-          </li>
-        ))}
+              {/* 본문 */}
+              <p
+                className="mt-3 sm:mt-4 text-[15px] sm:text-base leading-relaxed whitespace-pre-wrap break-words"
+                style={{ hyphens: "auto", overflowWrap: "anywhere", wordBreak: "break-word" }}
+              >
+                {e.message}
+              </p>
+            </li>
+          );
+        })}
 
         {loading && (
           <li className="text-center text-neutral-500 py-6">로딩 중…</li>
