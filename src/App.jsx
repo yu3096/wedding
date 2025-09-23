@@ -9,12 +9,13 @@ import Gallery from '@/components/Gallery.jsx'
 import Maps from '@/components/Maps.jsx'
 import Transport from '@/components/Transport.jsx'
 import Footer from '@/components/Footer.jsx'
+import GuestBook from '@/components/GuestBook.jsx'
 
 export default function App() {
   return (
     <div className="min-h-screen antialiased text-neutral-900 bg-white">
       <ScrollProgress />
-      
+
       <HeroFullBleed />
       <Hero />
       <Invitation />
@@ -23,6 +24,7 @@ export default function App() {
       <Gallery />
       <Maps />
       <Transport />
+      <GuestBook />
       <Footer />
     </div>
   )
