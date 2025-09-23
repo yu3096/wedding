@@ -10,6 +10,7 @@ import Maps from '@/components/Maps.jsx'
 import Transport from '@/components/Transport.jsx'
 import Footer from '@/components/Footer.jsx'
 import GuestBook from '@/components/GuestBook.jsx'
+import Appreciation from '@/components/Appreciation.jsx'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
       <Maps />
       <Transport />
       <GuestBook />
+      <Appreciation />
       <Footer />
     </div>
   )

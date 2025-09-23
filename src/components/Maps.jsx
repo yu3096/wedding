@@ -17,11 +17,11 @@ export default function Maps() {
                 <div className="text-neutral-800 font-medium">더컨벤션 반포</div>
                 <div className="text-neutral-600 text-sm">{address}</div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2 justify-center">
                 <CopyButton text={`${address}`} />
-                <a href="#" className="px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50">네이버 지도</a>
-                <a href="#" className="px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50">카카오맵</a>
-                <a href="#" className="px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50">티맵</a>
+                <a href="nmap://search?query=더컨벤션 반포&appname=com.example.myapp" className="px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50">네이버 지도</a>
+                <a href="kakaomap://place?id=598171385" className="px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50">카카오맵</a>
+                <a href="tmap://search?name=더컨벤션 반포" className="px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50">티맵</a>
               </div>
             </div>
             <p className="text-neutral-600 text-sm mt-4">웨딩홀 전용 주차장이 있습니다. (2시간 무료)</p>

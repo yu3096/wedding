@@ -32,15 +32,15 @@ export default function SaveTheDate({ year, month, day }) {
      // 표기 문자열 (요청 포맷)
      const dText =
        dday.kind === 'future'
-         ? `예식까지 남은 날 D-${dday.n}`
+         ? `예식까지 ${dday.n}일`
          : dday.kind === 'today'
-         ? '예식 당일 D-DAY'
-         : `예식 이후 D+${dday.n}`;
+         ? '예식 당일💕'
+         : `예식 이후 ${dday.n}일`;
 
      return (
        <section ref={ref} id="save-the-date" className="py-16 sm:py-24 container mx-auto px-4">
          <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-           <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">Save the date</p>
+           <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리의 순간</p>
            <h2 className="mt-2 text-3xl sm:text-4xl font-serif">
              {year}. {String(month).padStart(2,'0')}. {String(day).padStart(2,'0')}
            </h2>

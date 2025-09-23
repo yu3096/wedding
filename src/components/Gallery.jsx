@@ -18,7 +18,7 @@ export default function Gallery() {
   return (
     <section ref={ref} id="gallery" className="py-16 sm:py-24 container mx-auto px-4">
       <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-        <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">Our moment</p>
+        <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리의 순간</p>
         <h2 className="mt-2 font-serif text-3xl sm:text-4xl">사진을 터치하시면 더 많은 사진을 볼 수 있어요.</h2>
       </div>
       <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
