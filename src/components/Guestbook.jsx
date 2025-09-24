@@ -230,7 +230,7 @@ export default function GuestbookSupabase() {
   }
 
   return (
-    <section id="guestbook" className="container mx-auto px-4 py-16 max-w-2xl">
+    <section id="guestbook" className="container mx-auto px-4 py-16 max-w-8xl">
       <h2 className="text-2xl sm:text-3xl font-serif text-center">방명록</h2>
       <p className="text-center text-neutral-600 mt-2">축하 메시지를 남겨주세요 ☺️</p>
 
@@ -286,7 +286,8 @@ export default function GuestbookSupabase() {
                     {(e.name || "?").trim().slice(0, 2).toUpperCase()}
                   </div>
                   <div className="min-w-0">
-                    <div className="font-semibold text-[15px] sm:text-base leading-5 truncate">
+                    {/* ⬇️ 이름 5자까지만 보이고 넘치면 … */}
+                    <div className="font-semibold text-[15px] sm:text-base leading-5 truncate max-w-[10ch]">
                       {e.name}
                     </div>
                     <div className="text-[11px] sm:text-xs text-neutral-500">
