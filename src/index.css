@@ -43,3 +43,15 @@ svg .char {
 /* 최후 폴백: --vh 사용 중이면 함께 둡니다
 .hero-fullbleed { min-height: calc(var(--vh, 1vh) * 100); }
 */
+
+/* 모달 열릴 때 루트 블러 */
+.modal-open .app-root {
+  filter: blur(8px);
+  transition: filter 180ms ease;
+  will-change: filter;
+}
+
+/* (선택) 모달 열릴 때 아래 요소 클릭 차단 */
+.modal-open .app-root * {
+  pointer-events: none;
+}

@@ -11,23 +11,26 @@ import Transport from '@/components/Transport.jsx'
 import Footer from '@/components/Footer.jsx'
 import Guestbook from '@/components/Guestbook.jsx'
 import Appreciation from '@/components/Appreciation.jsx'
+import WeddingInfoProvider from '@/context/WeddingInfoProvider.jsx'
 
 export default function App() {
   return (
-    <div className="min-h-screen antialiased text-neutral-900 bg-white">
-      <ScrollProgress />
+    <div className="min-h-screen antialiased text-neutral-900 bg-white app-root">
+      <WeddingInfoProvider>
+        <ScrollProgress />
 
-      <HeroFullBleed />
-      <Hero />
-      <Invitation />
-      <SaveTheDate year={2026} month={6} day={21} />
-      <Accounts />
-      <Gallery />
-      <Maps />
-      <Transport />
-      <Guestbook />
-      <Appreciation />
-      <Footer />
+        <HeroFullBleed />
+        <Hero />
+        <Invitation />
+        <SaveTheDate year={2026} month={6} day={21} />
+        <Accounts />
+        <Gallery />
+        <Maps />
+        <Transport />
+        <Guestbook />
+        <Appreciation />
+        <Footer />
+      </WeddingInfoProvider>
     </div>
   )
 }

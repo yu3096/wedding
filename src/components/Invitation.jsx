@@ -1,8 +1,11 @@
 import React from 'react'
 import useReveal from './useReveal'
+import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 
 export default function Invitation() {
-  const { ref, visible } = useReveal()
+  const { ref, visible } = useReveal();
+  const { names } = useWeddingInfo();
+
   return (
     <section ref={ref} id="invitation" className="py-16 sm:py-24 container mx-auto px-4">
       <div className={`max-w-2xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
@@ -16,8 +19,8 @@ export default function Invitation() {
           <br />
           두 사람의 새로운 시작을 축복해 주시면 감사하겠습니다.<br />
           <br />
-          아버지 · 어머니의 장남 <b>신랑 유승민</b><br />
-          아버지 · 어머니의 장녀 <b>신부 정지수</b>
+          {names.groomFather} · {names.groomMother}의 장남 <b>신랑 {names.groomName}</b><br />
+          {names.brideFather} · {names.brideMother}의 장녀 <b>신부 {names.brideName}</b>
         </p>
       </div>
     </section>

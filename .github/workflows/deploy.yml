@@ -17,6 +17,19 @@ jobs:
       VITE_BASE: ${{ vars.VITE_BASE }}
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+
+      # --- 신랑/신부 본인 이름 ---
+      VITE_GROOM_NAME: ${{ secrets.VITE_GROOM_NAME }}
+      VITE_BRIDE_NAME: ${{ secrets.VITE_BRIDE_NAME }}
+
+      # --- 부모님 성함 ---
+      VITE_GROOM_FATHER: ${{ secrets.VITE_GROOM_FATHER }}
+      VITE_GROOM_MOTHER: ${{ secrets.VITE_GROOM_MOTHER }}
+      VITE_BRIDE_FATHER: ${{ secrets.VITE_BRIDE_FATHER }}
+      VITE_BRIDE_MOTHER: ${{ secrets.VITE_BRIDE_MOTHER }}
+
+      VITE_GROOM_ACCOUNTS: ${{ secrets.VITE_GROOM_ACCOUNTS }}
+      VITE_BRIDE_ACCOUNTS: ${{ secrets.VITE_BRIDE_ACCOUNTS }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -1,9 +1,11 @@
 import React from "react";
 import ResponsivePicture from "@/components/media/ResponsivePicture.jsx"
 import pic from '@/assets/images/Appreciation.jpg?w=480;768;1024;1440;1920&format=avif;webp;jpg&quality=70&as=picture';
-
+import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 
 export default function Appreciation() {
+  const { names } = useWeddingInfo();
+
   return (
     <section id="appreciation" className="relative overflow-hidden">
       {/* 은은한 배경 */}
@@ -52,9 +54,9 @@ export default function Appreciation() {
         {/* 시그니처 (태그로 직접) */}
         <div className="mt-6 text-center">
           <p className="font-serif text-lg sm:text-xl">
-            <span className="tracking-tight">유승민</span>{" "}
+            <span className="tracking-tight">{names.groomName}</span>{" "}
             <span className="mx-1 text-neutral-400">·</span>
-            <span className="tracking-tight">정지수</span>{" "}
+            <span className="tracking-tight">{names.brideName}</span>{" "}
 
             <span className="tracking-tight">올림</span>
           </p>

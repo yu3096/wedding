@@ -2,8 +2,10 @@ import React from "react";
 import SvgStaggerText from "@/components/SvgStaggerText";
 import ResponsivePicture from "@/components/media/ResponsivePicture";
 import heroPic from '@/assets/images/hero.jpg?w=480;768;1024;1440;1920&format=avif;webp;jpg&quality=70&as=picture';
+import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 
 export default function HeroFullBleed() {
+  const { names } = useWeddingInfo();
   return (
     <header className="hero-fullbleed relative bg-black overflow-hidden">
       <ResponsivePicture
@@ -43,7 +45,7 @@ export default function HeroFullBleed() {
         {/* 메인 타이틀 - 글자당 45ms */}
         <SvgStaggerText
           x="50%" y="45%"
-          text="유승민 & 정지수"
+          text={`${names.groomName} & ${names.brideName}`}
           step={45}
           className="fill-white font-serif"
           style={{ filter: "url(#shadow)", fontSize: "clamp(36px, 7vw, 88px)" }}
