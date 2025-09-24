@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React from "react";
 import useReveal from "./useReveal";
 import CopyButton from "./CopyButton.jsx";
 import KakaoDynamicMap from "@/components/Maps/KakaoDynamicMap";
@@ -6,42 +6,6 @@ import KakaoDynamicMap from "@/components/Maps/KakaoDynamicMap";
 export default function Maps() {
   const address = "서울 서초구 사평대로 108, 더컨벤션 반포";
   const { ref, visible } = useReveal();
-
-  const infoRef = useRef(null);
-  const [mapH, setMapH] = useState(400);
-
-  // 모바일 주소창 변동 대응: --vh 세팅
-  useEffect(() => {
-    const setVH = () => {
-      document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
-    };
-    setVH();
-    window.addEventListener("resize", setVH, { passive: true });
-    return () => window.removeEventListener("resize", setVH);
-  }, []);
-
-  // 지도 높이 = 뷰포트 - 정보영역(패딩 포함) - 카드 테두리 여유
-  const recalc = () => {
-    const vh = Math.max(window.innerHeight, document.documentElement.clientHeight || 0);
-    const infoH = infoRef.current?.offsetHeight || 0;
-    const borderAndGap = 100; // 카드 상하 여유(필요시 조절)
-    const next = Math.max(280, vh - infoH - borderAndGap);
-    setMapH(next);
-  };
-
-  useLayoutEffect(() => {
-    recalc();
-  }, []);
-
-  useEffect(() => {
-    const ro = new ResizeObserver(recalc);
-    if (infoRef.current) ro.observe(infoRef.current);
-    window.addEventListener("resize", recalc, { passive: true });
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", recalc);
-    };
-  }, []);
 
   return (
     <section ref={ref} id="map" className="py-16 sm:py-24 bg-neutral-50">
@@ -52,23 +16,26 @@ export default function Maps() {
       >
         <h2 className="text-center font-serif text-3xl sm:text-4xl">오시는길</h2>
 
-        <div className="max-w-8xl w-full mx-auto mt-6 rounded-2xl overflow-hidden border bg-white shadow-sm flex flex-col">
-          {/* 지도: grow 로 남는 공간 모두 차지 */}
-          <div className="relative w-full grow min-h-[280px]" style={{ height: mapH }}>
+        {/* 카드 전체를 80lvh로 고정 → 내부 flex 컬럼에서 지도 영역을 안정적으로 확장 */}
+        <div
+          className="max-w-8xl w-full mx-auto mt-6 rounded-2xl overflow-hidden border bg-white shadow-sm flex flex-col"
+          style={{ height: "80lvh" }}
+        >
+          {/* 지도: 남은 공간 전부 차지 (최소 높이 안전장치 포함) */}
+          <div className="relative w-full flex-1 min-h-[280px]">
             <KakaoDynamicMap
               lat={37.49887}
               lng={126.99656}
               level={4}
-              className="inset-0"
-              // 필요시 상호작용 제어
+              className=""
               draggable
               scrollwheel
               doubleClickZoom
             />
           </div>
 
-          {/* 정보 영역(높이 변화 감지 대상) */}
-          <div ref={infoRef} className="p-5">
+          {/* 정보 영역 */}
+          <div className="p-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <div className="text-neutral-800 font-medium">더컨벤션 반포</div>
