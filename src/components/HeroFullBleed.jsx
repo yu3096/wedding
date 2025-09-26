@@ -3,9 +3,10 @@ import SvgStaggerText from "@/components/SvgStaggerText";
 import ResponsivePicture from "@/components/media/ResponsivePicture";
 import heroPic from '@/assets/images/hero.jpg?w=480;768;1024;1440;1920&format=avif;webp;jpg&quality=70&as=picture';
 import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
+import { format, DATE_PRESETS, toDash, toKorean, getWeekdayName } from "@/lib/dateFormat.js";
 
 export default function HeroFullBleed() {
-  const { names } = useWeddingInfo();
+  const { names, wedding } = useWeddingInfo();
   return (
     <header className="hero-fullbleed relative bg-black overflow-hidden">
       <ResponsivePicture
@@ -54,7 +55,7 @@ export default function HeroFullBleed() {
         {/* 날짜/장소 - 글자당 30ms (직선 중앙 정렬) */}
         <SvgStaggerText
           x="50%" y="58%"
-          text="2026.06.21 (일) 오전 11:00"
+          text={`${format(wedding.weddingDate, DATE_PRESETS.KOREAN, { includeWeekday: true })} ${wedding.weddingTime}`}
           step={30}
           className="fill-white/95"
           style={{ filter: "url(#shadow)", fontSize: "clamp(14px, 2.6vw, 24px)" }}

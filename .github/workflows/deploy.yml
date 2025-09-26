@@ -22,6 +22,16 @@ jobs:
       VITE_GROOM_NAME: ${{ secrets.VITE_GROOM_NAME }}
       VITE_BRIDE_NAME: ${{ secrets.VITE_BRIDE_NAME }}
 
+      # --- 웨딩홀
+      VITE_WEDDING_DATE: ${{ vars.VITE_WEDDING_DATE }}
+      VITE_WEDDING_TIME: ${{ vars.VITE_WEDDING_TIME }}
+      VITE_WEDDING_HOLE: ${{ vars.VITE_WEDDING_HOLE }}
+      VITE_WEDDING_ADDR: ${{ vars.VITE_WEDDING_ADDR }}
+
+      VITE_WEDDING_SUBWAY: ${{ vars.VITE_WEDDING_SUBWAY }}
+      VITE_WEDDING_BUS: ${{ vars.VITE_WEDDING_BUS }}
+      VITE_WEDDING_CAR: ${{ vars.VITE_WEDDING_CAR }}
+
       # --- 부모님 성함 ---
       VITE_GROOM_FATHER: ${{ secrets.VITE_GROOM_FATHER }}
       VITE_GROOM_MOTHER: ${{ secrets.VITE_GROOM_MOTHER }}
