@@ -2,9 +2,11 @@ import React from "react";
 import useReveal from "./useReveal";
 import CopyButton from "./CopyButton.jsx";
 import KakaoDynamicMap from "@/components/Maps/KakaoDynamicMap";
+import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 
 export default function Maps() {
-  const address = "서울 서초구 사평대로 108, 더컨벤션 반포";
+  const { wedding } = useWeddingInfo();
+  const address = `${wedding.weddingAddr}, ${wedding.weddingHall}`;// "서울 서초구 사평대로 108, 더컨벤션 반포";
   const { ref, visible } = useReveal();
 
   return (
@@ -38,13 +40,13 @@ export default function Maps() {
           <div className="p-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <div className="text-neutral-800 font-medium">더컨벤션 반포</div>
+                <div className="text-neutral-800 font-medium">{wedding.weddingHall}</div>
                 <div className="text-neutral-600 text-sm">{address}</div>
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
                 <CopyButton text={`${address}`} />
                 <a
-                  href="nmap://search?query=더컨벤션 반포&appname=com.example.myapp"
+                  href={`nmap://search?query=${wedding.weddingHall}&appname=com.example.myapp`}
                   className="px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50"
                 >
                   네이버 지도

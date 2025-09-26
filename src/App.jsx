@@ -11,18 +11,21 @@ import Transport from '@/components/Transport.jsx'
 import Footer from '@/components/Footer.jsx'
 import Guestbook from '@/components/Guestbook.jsx'
 import Appreciation from '@/components/Appreciation.jsx'
-import WeddingInfoProvider from '@/context/WeddingInfoProvider.jsx'
+import { WeddingInfoProvider, useWeddingInfo } from '@/context/WeddingInfoProvider.jsx'
+import { parseDateStr } from "@/lib/dateFormat.js";
 
 export default function App() {
+  const { wedding } = useWeddingInfo();
+  const dateObj = parseDateStr(wedding.weddingDate);
+
   return (
     <div className="min-h-screen antialiased text-neutral-900 bg-white app-root">
-      <WeddingInfoProvider>
         <ScrollProgress />
 
         <HeroFullBleed />
         <Hero />
         <Invitation />
-        <SaveTheDate year={2026} month={6} day={21} />
+        <SaveTheDate year={dateObj.year} month={dateObj.month} day={dateObj.day} />
         <Accounts />
         <Gallery />
         <Maps />
@@ -30,7 +33,6 @@ export default function App() {
         <Guestbook />
         <Appreciation />
         <Footer />
-      </WeddingInfoProvider>
     </div>
   )
 }

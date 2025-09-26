@@ -12,7 +12,7 @@ function safeParse(json, fallback) {
 
 const WeddingInfoContext = createContext(null);
 
-export default function WeddingInfoProvider({ children }) {
+export function WeddingInfoProvider({ children }) {
   // 이름(여러 곳에서 재사용)
   const groomName = import.meta.env.VITE_GROOM_NAME || "";
   const brideName = import.meta.env.VITE_BRIDE_NAME || "";
@@ -20,6 +20,15 @@ export default function WeddingInfoProvider({ children }) {
   const groomMother = import.meta.env.VITE_GROOM_MOTHER || "";
   const brideFather = import.meta.env.VITE_BRIDE_FATHER || "";
   const brideMother = import.meta.env.VITE_BRIDE_MOTHER || "";
+
+  const weddingDate = import.meta.env.VITE_WEDDING_DATE || "";
+  const weddingTime = import.meta.env.VITE_WEDDING_TIME || "";
+
+  const weddingAddr = import.meta.env.VITE_WEDDING_ADDR || "";
+  const weddingHall = import.meta.env.VITE_WEDDING_HALL || "";
+  const weddingBus = import.meta.env.VITE_WEDDING_BUS || "";
+  const weddingSubway = import.meta.env.VITE_WEDDING_SUBWAY || "";
+  const weddingCar = import.meta.env.VITE_WEDDING_CAR || "";
 
   // 계좌(JSON)
   const groomAccounts = safeParse(import.meta.env.VITE_GROOM_ACCOUNTS, []);
@@ -36,6 +45,10 @@ export default function WeddingInfoProvider({ children }) {
       groomFather, groomMother,
       brideFather, brideMother,
     },
+    //웨딩홀 및 웨딩날짜
+    wedding: {
+        weddingDate, weddingHall, weddingTime, weddingAddr, weddingBus, weddingCar, weddingSubway
+    },
     // 계좌
     accounts: {
       groomSide, brideSide,
@@ -43,6 +56,7 @@ export default function WeddingInfoProvider({ children }) {
     },
   }), [
     groomName, brideName, groomFather, groomMother, brideFather, brideMother,
+    weddingDate, weddingHall, weddingTime, weddingAddr, weddingBus, weddingSubway, weddingCar,
     groomSide, brideSide, groomAccounts, brideAccounts
   ]);
 
