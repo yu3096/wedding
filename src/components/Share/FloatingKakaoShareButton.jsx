@@ -9,7 +9,7 @@ export default function FloatingKakaoShareButton() {
     const ticking = useRef(false);
 
     // 아이콘 경로 (GitHub Pages 등 base 경로 안전)
-    const kakaoIcon = new URL("/icons/kakao.svg", import.meta.env.BASE_URL).href;
+    const kakaoIcon = new URL("/icons/kakao.svg", import.meta.env.VITE_BASE).href;
 
     // Kakao SDK init (VITE_KAKAO_JS_KEY 사용)
     useEffect(() => {
