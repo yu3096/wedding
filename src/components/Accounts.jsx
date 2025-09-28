@@ -1,10 +1,10 @@
-// src/components/Accounts.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import useReveal from "./useReveal";
 import CopyButton from "./CopyButton.jsx";
 import ModalPortal from "@/components/Modal/ModalPortal.jsx";
 import Backdrop from "@/components/Modal/Backdrop.jsx";
 import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
+import { trackEvent } from "@/lib/ga.js";
 
 // 측별 테마
 const THEMES = [
@@ -161,7 +161,13 @@ export default function Accounts() {
                             >
                               {acc.role}
                             </span>
-                            <CopyButton text={`${acc.bank} ${acc.num} ${acc.name}`} />
+                            <CopyButton text={`${acc.bank} ${acc.num} ${acc.name}`}
+                                        onCopied={() =>
+                                            trackEvent("account_copy", {
+                                                event_category: "accounts",
+                                                event_label: `${acc.role} ${acc.name}`,
+                                            })}
+                            />
                           </div>
 
                           {/* 두 번째 줄: 은행 + 예금주 */}

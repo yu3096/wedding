@@ -38,6 +38,9 @@ export function WeddingInfoProvider({ children }) {
   const groomSide = import.meta.env.VITE_GROOM_SIDE || "신랑측";
   const brideSide = import.meta.env.VITE_BRIDE_SIDE || "신부측";
 
+  //images
+  const thumbnail = import.meta.env.VITE_THUMBNAIL || "";
+
   const value = useMemo(() => ({
     // 이름/가족
     names: {
@@ -54,10 +57,13 @@ export function WeddingInfoProvider({ children }) {
       groomSide, brideSide,
       groomAccounts, brideAccounts,
     },
+    images: {
+        thumbnail
+    }
   }), [
     groomName, brideName, groomFather, groomMother, brideFather, brideMother,
     weddingDate, weddingHall, weddingTime, weddingAddr, weddingBus, weddingSubway, weddingCar,
-    groomSide, brideSide, groomAccounts, brideAccounts
+    groomSide, brideSide, groomAccounts, brideAccounts, thumbnail
   ]);
 
   return (

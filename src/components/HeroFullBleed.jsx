@@ -5,10 +5,10 @@ import heroPic from '@/assets/images/hero.jpg?w=480;768;1024;1440;1920&format=av
 import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 import { format, DATE_PRESETS, toDash, toKorean, getWeekdayName } from "@/lib/dateFormat.js";
 
-export default function HeroFullBleed() {
+export default function HeroFullBleed({id}) {
   const { names, wedding } = useWeddingInfo();
   return (
-    <header className="hero-fullbleed relative bg-black overflow-hidden">
+    <section id="hero" className="hero-fullbleed relative bg-black overflow-hidden">
       <ResponsivePicture
           picture={heroPic}
           alt="Hero background"
@@ -66,6 +66,6 @@ export default function HeroFullBleed() {
         <span className="text-sm">Scroll</span>
         <span className="block w-[1px] h-10 bg-white/80 animate-pulse" />
       </div>
-    </header>
+    </section>
   );
 }
