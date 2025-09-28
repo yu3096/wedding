@@ -7,7 +7,7 @@ export default function FloatingKakaoShareButton() {
     const { wedding } = useWeddingInfo();
     const [phase, setPhase] = useState("hidden"); // 'hidden' | 'peek' | 'show'
     const ticking = useRef(false);
-    const kakaoIcon = `${import.meta.env.BASE_URL}icons/kakao.svg`;
+    const kakaoIcon = `${import.meta.env.BASE_URL}/icons/kakao.svg`;
 
     // Kakao SDK init (VITE_KAKAO_JS_KEY 사용)
     useEffect(() => {

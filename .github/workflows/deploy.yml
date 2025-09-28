@@ -40,6 +40,11 @@ jobs:
 
       VITE_GROOM_ACCOUNTS: ${{ secrets.VITE_GROOM_ACCOUNTS }}
       VITE_BRIDE_ACCOUNTS: ${{ secrets.VITE_BRIDE_ACCOUNTS }}
+
+      # --- GA KEY
+      VITE_GA_ID: ${{secrets.VITE_GA_ID}}
+      # --- KAKAO JS KEY
+      VITE_KAKAO_JS_KEY: ${{secrets.VITE_KAKAO_JS_KEY}}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
