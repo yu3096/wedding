@@ -13,7 +13,7 @@ export default function Hero() {
   const { ref, visible } = useReveal()
   const { names, wedding } = useWeddingInfo();
   return (
-    <header ref={ref} className="pt-16 sm:pt-24">
+    <section id="hero" ref={ref} className="pt-16 sm:pt-24">
       <div className="container mx-auto px-4">
         <div className={`max-w-4xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리 결혼합니다</p>
@@ -28,6 +28,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-    </header>
+    </section>
   )
 }

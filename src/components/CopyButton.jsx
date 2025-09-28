@@ -40,6 +40,7 @@ export default function CopyButton({
   className = "px-3 py-1.5 text-sm rounded-full border hover:bg-neutral-50",
   successLabel = "복사완료",
   label = "복사하기",
+  onCopied, //성공 시 콜백
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -54,6 +55,7 @@ export default function CopyButton({
       return;
     }
     setCopied(true);
+    onCopied?.();
     setTimeout(() => setCopied(false), 1500);
   };
 

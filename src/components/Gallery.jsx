@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import useReveal from './useReveal'
+import { trackEvent } from "@/lib/ga.js";
 
 const sampleImages = [
   "https://images.unsplash.com/photo-1520962918287-7448c2878f65?q=80&w=1600&auto=format&fit=crop",
@@ -11,6 +12,13 @@ const sampleImages = [
   "https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop"
 ]
+
+function trackGalleryOpen(identifier) {
+    trackEvent("gallery_view_image", {
+        event_category: "gallery",
+        event_label: identifier, // 문자열이면 무엇이든 가능 (번호, 파일명, id 등)
+    });
+}
 
 export default function Gallery() {
   const { ref, visible } = useReveal()
@@ -25,7 +33,10 @@ export default function Gallery() {
       </div>
       <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
         {sampleImages.map(src => (
-          <button key={src} className="group relative overflow-hidden rounded-2xl border" onClick={() => setActive(src)}>
+          <button key={src} className="group relative overflow-hidden rounded-2xl border" onClick={() => {
+              setActive(src);
+              trackGalleryOpen(`common-${src}`);}
+          }>
             <img src={src} alt="sample" className="w-full h-40 md:h-44 object-cover group-hover:scale-[1.03] transition" />
           </button>
         ))}
