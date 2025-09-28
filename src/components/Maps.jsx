@@ -21,7 +21,7 @@ export default function Maps() {
         {/* 카드 전체를 80lvh로 고정 → 내부 flex 컬럼에서 지도 영역을 안정적으로 확장 */}
         <div
           className="max-w-8xl w-full mx-auto mt-6 rounded-2xl overflow-hidden border bg-white shadow-sm flex flex-col"
-          style={{ height: "80lvh" }}
+          style={{ height: "60lvh" }}
         >
           {/* 지도: 남은 공간 전부 차지 (최소 높이 안전장치 포함) */}
           <div className="relative w-full flex-1 min-h-[280px]">
