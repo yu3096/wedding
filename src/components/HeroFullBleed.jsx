@@ -5,10 +5,10 @@ import heroPic from '@/assets/images/hero.jpg?w=480;768;1024;1440;1920&format=av
 import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 import { format, DATE_PRESETS, toDash, toKorean, getWeekdayName } from "@/lib/dateFormat.js";
 
-export default function HeroFullBleed({id}) {
+export default function HeroFullBleed() {
   const { names, wedding } = useWeddingInfo();
   return (
-    <section id="hero" className="hero-fullbleed relative bg-black overflow-hidden">
+    <section id="heroFullBleed" className="hero-fullbleed relative bg-black overflow-hidden">
       <ResponsivePicture
           picture={heroPic}
           alt="Hero background"
@@ -39,8 +39,8 @@ export default function HeroFullBleed({id}) {
           x="50%" y="35%"
           text="WE ARE GETTING MARRIED"
           step={25}
-          className="fill-white/90 uppercase tracking-[0.4em]"
-          style={{ filter: "url(#shadow)", fontSize: "clamp(12px, 1.6vw, 18px)" }}
+          className="fill-white/90 uppercase tracking-[0.4em] calligraphy"
+          style={{ filter: "url(#shadow)", fontSize: "clamp(20px, 7vw, 22px)" }}
         />
 
         {/* 메인 타이틀 - 글자당 45ms */}
@@ -49,7 +49,7 @@ export default function HeroFullBleed({id}) {
           text={`${names.groomName} & ${names.brideName}`}
           step={45}
           className="fill-white font-serif"
-          style={{ filter: "url(#shadow)", fontSize: "clamp(36px, 7vw, 88px)" }}
+          style={{ filter: "url(#shadow)", fontSize: "clamp(36px, 15vw, 88px)" }}
         />
 
         {/* 날짜/장소 - 글자당 30ms (직선 중앙 정렬) */}
@@ -58,7 +58,7 @@ export default function HeroFullBleed({id}) {
           text={`${format(wedding.weddingDate, DATE_PRESETS.KOREAN, { includeWeekday: true })} ${wedding.weddingTime}`}
           step={30}
           className="fill-white/95"
-          style={{ filter: "url(#shadow)", fontSize: "clamp(14px, 2.6vw, 24px)" }}
+          style={{ filter: "url(#shadow)", fontSize: "clamp(14px, 8vw, 24px)" }}
         />
       </svg>
 

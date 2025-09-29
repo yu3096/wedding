@@ -18,7 +18,7 @@ export default function FloatingKakaoShareButton() {
 
     // Hero 보일 땐 숨김 / 지나가면 등장 (peek → show)
     useEffect(() => {
-        const hero = document.getElementById("hero");
+        const hero = document.getElementById("heroFullBleed");
         if (!hero) return;
 
         const calc = () => {
