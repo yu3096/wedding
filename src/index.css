@@ -4,6 +4,8 @@
 
 /* Smooth scroll */
 html { scroll-behavior: smooth; }
+.calligraphy{font-family: 'NanumSonPyeonJiCe';}
+
 
 /* 글자 단위 stagger 애니메이션 */
 @keyframes charFadeUp {
