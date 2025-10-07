@@ -55,13 +55,11 @@ export default function FloatingKakaoShareButton() {
             return;
         }
         try {
-            window.Kakao.Share.sendDefault({
+            Kakao.Share.sendDefault({
                 objectType: "feed",
                 content: {
                     title: "저희 결혼식에 초대합니다 💍",
                     description: "청첩장을 확인해보세요!",
-                    imageUrl:
-                        wedding.weddingThumbnail,
                     link: {
                         mobileWebUrl: window.location.href,
                         webUrl: window.location.href,
@@ -78,6 +76,7 @@ export default function FloatingKakaoShareButton() {
                 ],
             });
         } catch (e) {
+            alert(e);
             console.warn("카카오 공유 실패 → SMS fallback", e);
             fallbackToSMS();
         }
