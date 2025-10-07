@@ -1,25 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SvgStaggerText from "@/components/SvgStaggerText";
-import ResponsivePicture from "@/components/media/ResponsivePicture";
-import heroPic from '@/assets/images/hero.jpg?w=480;768;1024;1440;1920&format=avif;webp;jpg&quality=70&as=picture';
-import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
+import ResponsivePicture from "@/components/Media/ResponsivePicture";
+import { useWeddingInfo } from "@/context/WeddingInfoProvider";
 import { format, DATE_PRESETS, toDash, toKorean, getWeekdayName } from "@/lib/dateFormat.js";
+import { getSignedUrl } from "@/lib/supabase-storage.js";
 
 export default function HeroFullBleed() {
   const { names, wedding } = useWeddingInfo();
+  const [url, setUrl] = useState(null);
+
+  useEffect(() => {
+      getSignedUrl('wedding-bucket', 'mobile-img/Hero.jpg', 60)
+          .then(setUrl)
+          .catch(console.error);
+  }, []);
+
   return (
     <section id="heroFullBleed" className="hero-fullbleed relative bg-black overflow-hidden">
       <ResponsivePicture
-          picture={heroPic}
-          alt="Hero background"
-          sizes="100vw"
-          fetchPriority="high"
-          loading="eager"
-          decoding="async"
-          className="absolute inset-0"                       // <picture> 위치
-          imgClassName="w-full h-full object-cover block"                      // <img> 추가 클래스(중앙 정렬 등)
-          fit="cover"                                 // ✅ 긴 축 기준
-        />
+        picture={url}
+        alt="Hero background"
+        sizes="100vw"
+        fetchPriority="high"
+        loading="eager"
+        decoding="async"
+        className="absolute inset-0"                       // <picture> 위치
+        imgClassName="w-full h-full object-cover block"                      // <img> 추가 클래스(중앙 정렬 등)
+        fit="cover"                                 // ✅ 긴 축 기준
+      />
+
       <div className="absolute inset-0 bg-black/30" />
 
       <svg

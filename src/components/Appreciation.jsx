@@ -1,10 +1,17 @@
-import React from "react";
-import ResponsivePicture from "@/components/media/ResponsivePicture.jsx"
-import pic from '@/assets/images/Appreciation.jpg?w=480;768;1024;1440;1920&format=avif;webp;jpg&quality=70&as=picture';
-import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
+import React, { useState, useEffect } from "react";
+import ResponsivePicture from "@/components/Media/ResponsivePicture"
+import { useWeddingInfo } from "@/context/WeddingInfoProvider";
+import { getSignedUrl } from "@/lib/supabase-storage.js";
 
 export default function Appreciation() {
   const { names } = useWeddingInfo();
+  const [picUrl, setPicUrl] = useState(null);
+
+  useEffect(() => {
+    getSignedUrl('wedding-bucket', 'mobile-img/Appreciation.jpg', 60)
+      .then(setPicUrl)
+      .catch(console.error);
+  }, []);
 
   return (
     <section id="appreciation" className="relative overflow-hidden">
@@ -64,7 +71,7 @@ export default function Appreciation() {
       </div>
       <div className="mt-10 text-center relative">
         <ResponsivePicture
-          picture={pic}
+          picture={picUrl}
           alt="감사의 마음을 담은 사진"
           sizes="100vw"
           fetchPriority="high"
