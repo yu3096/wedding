@@ -29,13 +29,13 @@ export default function App() {
         <ScrollProgress />
 
         <HeroFullBleed />
-        <Hero />
+        {/*<Hero />*/}
         <Invitation />
         <SaveTheDate year={dateObj.year} month={dateObj.month} day={dateObj.day} />
-        <Accounts />
         <Gallery />
         <Maps />
         <Transport />
+        <Accounts />
         <Guestbook />
         <Appreciation />
         <Footer />
