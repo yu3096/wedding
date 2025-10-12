@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react";
 import ResponsivePicture from "@/components/Media/ResponsivePicture"
 import { useWeddingInfo } from "@/context/WeddingInfoProvider";
 import { getSignedUrl } from "@/lib/supabase-storage.js";
+import useImageProgress from "@/lib/useImageProgress";
+import { ProgressOverlay }  from "@/components/Media/ProgressBar.jsx"
 
 export default function Appreciation() {
   const { names } = useWeddingInfo();
-  const [picUrl, setPicUrl] = useState(null);
+  const [signedUrl, setSignedUrl] = useState(null);
 
   useEffect(() => {
     getSignedUrl('wedding-bucket', 'mobile-img/Appreciation.jpg', 60)
-      .then(setPicUrl)
+      .then(setSignedUrl)
       .catch(console.error);
   }, []);
+
+  // ⬇️ 새로 추가: 서명 URL을 스트리밍 로딩해 Blob Object URL 생성 + 진행률 추적
+  const { objectUrl, status, percent, mode } = useImageProgress(signedUrl);
+
+  const isLoaded = status === "loaded";
 
   return (
     <section id="appreciation" className="relative overflow-hidden">
@@ -22,9 +29,9 @@ export default function Appreciation() {
       />
       <div className="container mx-auto max-w-2xl px-5 py-16 sm:py-20">
         {/* 서브 타이틀 */}
-        <p className="text-xs tracking-[0.25em] uppercase text-neutral-500 text-center">
+        {/*<p className="text-xs tracking-[0.25em] uppercase text-neutral-500 text-center">
           With Gratitude
-        </p>
+        </p>*/}
 
         {/* 메인 타이틀 */}
         <h2 className="mt-2 font-serif text-2xl sm:text-3xl text-center">
@@ -69,23 +76,29 @@ export default function Appreciation() {
           </p>
         </div>
       </div>
-      <div className="mt-10 text-center relative">
+      <div className="hero-fullbleed relative bg-black overflow-hidden">
         <ResponsivePicture
-          picture={picUrl}
+          picture={objectUrl}
           alt="감사의 마음을 담은 사진"
           sizes="100vw"
           fetchPriority="high"
           loading="eager"
           decoding="async"
-          className="mx-auto rounded-2xl shadow-md max-w-xs sm:max-w-sm"                       // <picture> 위치
-          imgClassName="w-full h-full object-cover block"                      // <img> 추가 클래스(중앙 정렬 등)
-          fit="cover"                                 // ✅ 긴 축 기준
+          className="absolute inset-0"
+          imgClassName={
+              "w-full h-full object-cover block transition-opacity duration-700 " +
+              (isLoaded ? "opacity-100" : "opacity-0")
+          }
+          fit="cover"                              // ✅ 긴 축 기준
         />
-         {/* 위쪽 그라데이션 */}
-          <div className="pointer-events-none absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-white to-transparent" />
 
-          {/* 아래쪽 그라데이션 */}
-          <div className="pointer-events-none absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-white to-transparent" />
+        {!isLoaded && (signedUrl ? <ProgressOverlay percent={percent} mode={mode} /> : null)}
+
+        {/* 위쪽 그라데이션 */}
+        <div className="pointer-events-none absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-white to-transparent" />
+
+        {/* 아래쪽 그라데이션 */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-white to-transparent" />
       </div>
     </section>
   );
