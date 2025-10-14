@@ -32,7 +32,7 @@ export default function App() {
         {/*<Hero />*/}
         <Invitation />
         <SaveTheDate year={dateObj.year} month={dateObj.month} day={dateObj.day} />
-        <Gallery />
+        <Gallery bucket="wedding-bucket" dir="mobile-img/gallery" />
         <Maps />
         <Transport />
         <Accounts />

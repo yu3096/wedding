@@ -26,26 +26,53 @@ export async function getSignedUrl(bucket, path, expiresIn = 60) {
  * @returns {Promise<Array<{ path: string, signedUrl: string }>>}
  */
 export async function getSignedUrlsInDir(bucket, dir, expiresIn = 60) {
+    // 1) dir 정규화 (앞/뒤 슬래시 정리)
+    const normalizedDir = String(dir || "")
+        .replace(/^\/+/, "")   // 앞 슬래시 제거
+        .replace(/\/+$/, "");  // 뒤 슬래시 제거
+
     const { data: files, error } = await supabase
         .storage
         .from(bucket)
-        .list(dir, { limit: 100, offset: 0 });
+        .list(normalizedDir, { limit: 100, offset: 0 });
 
     if (error) throw error;
 
-    const paths = (files || [])
-        .filter((f) => !f.name.endsWith('/'))
-        .map((f) => `${dir}/${f.name}`);
+    const IMG_EXT = /\.(jpe?g|png|webp|gif|svg|bmp|avif)$/i;
 
-    if (!paths.length) return [];
+    // 2) 파일만 추리고, 숨김/보조파일 제외 + 이미지 확장자만 허용
+    const fileNames = (files || [])
+        .filter((f) => {
+            // 폴더는 보통 metadata가 없거나 size가 없음
+            if (!f?.metadata || typeof f.metadata.size !== "number") return false;
 
-    const { data: signedUrls, error: signErr } = await supabase
+            const name = f.name || "";
+            if (!name) return false;
+
+            // 숨김/보조 파일 제외 (.DS_Store, ._xxx 등)
+            if (name.startsWith(".") || name.startsWith("._")) return false;
+
+            // 이미지 확장자만 허용
+            if (!IMG_EXT.test(name)) return false;
+
+            return true;
+        })
+        .map((f) => `${normalizedDir}/${f.name}`);
+
+    if (fileNames.length === 0) return [];
+
+    // 3) 중복 경로 제거
+    const uniquePaths = Array.from(new Set(fileNames));
+
+    // 4) 서명 URL 발급
+    const { data: signed, error: signErr } = await supabase
         .storage
         .from(bucket)
-        .createSignedUrls(paths, expiresIn);
+        .createSignedUrls(uniquePaths, expiresIn);
 
     if (signErr) throw signErr;
-    return signedUrls; // [{ path, signedUrl }]
+
+    return (signed || []).filter(Boolean);
 }
 
 /* ------------------------ 여기서부터 '헬퍼' 이식본 ------------------------ */
