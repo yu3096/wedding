@@ -5,8 +5,6 @@ import ResponsivePicture from "@/components/Media/ResponsivePicture";
 import { useWeddingInfo } from "@/context/WeddingInfoProvider";
 import { format, DATE_PRESETS } from "@/lib/dateFormat.js";
 import { getSignedUrl } from "@/lib/supabase-storage.js";
-
-// ⬇️ 새로 추가
 import useImageProgress from "@/lib/useImageProgress";
 import { ProgressOverlay }  from "@/components/Media/ProgressBar.jsx"
 
