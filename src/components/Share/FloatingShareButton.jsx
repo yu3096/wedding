@@ -6,26 +6,24 @@ function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
 export default function FloatingShareButton() {
     const { wedding } = useWeddingInfo();
 
-    // 스크롤에 따른 버튼 노출 상태 ('hidden' | 'peek' | 'show')
-    const [phase, setPhase] = useState("hidden");
-    // 공유 메뉴가 열렸는지 여부
+    // 스크롤 및 메뉴 상태 관리
+    const [phase, setPhase] = useState("hidden"); // 'hidden' | 'peek' | 'show'
     const [isOpen, setIsOpen] = useState(false);
 
     const ticking = useRef(false);
 
-    // 아이콘 경로 (public/icons 폴더에 있다고 가정, 없으면 텍스트나 SVG로 대체 가능)
-    const kakaoIcon = `${import.meta.env.BASE_URL}/icons/kakao.svg`;
-    // 라인 아이콘이 없다면 아래 SVG 코드를 사용하거나 경로를 수정하세요.
-    const lineIcon = `${import.meta.env.BASE_URL}/icons/line.png`; // 혹은 svg
+    // 이미지 경로 (필요 시 주석 해제하여 사용)
+    // const kakaoIcon = `${import.meta.env.BASE_URL}/icons/kakao.svg`;
+    // const lineIcon = `${import.meta.env.BASE_URL}/icons/line.png`;
 
-    // 1. Kakao SDK init
+    // 1. Kakao SDK 초기화
     useEffect(() => {
         if (window.Kakao && !window.Kakao.isInitialized()) {
             window.Kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
         }
     }, []);
 
-    // 2. 스크롤 감지 로직 (기존 유지)
+    // 2. 스크롤 감지 로직
     useEffect(() => {
         const hero = document.getElementById("heroFullBleed");
         if (!hero) return;
@@ -58,14 +56,14 @@ export default function FloatingShareButton() {
         };
     }, []);
 
-    // 메뉴 닫기 헬퍼 (스크롤 등으로 phase가 hidden이 되면 메뉴도 닫기)
+    // 메뉴가 숨겨질 때 열림 상태도 초기화
     useEffect(() => {
         if (phase === 'hidden') {
             setIsOpen(false);
         }
     }, [phase]);
 
-    // 3. 카카오 공유 함수
+    // 3. 카카오 공유 로직
     const shareToKakao = () => {
         if (!window.Kakao) {
             fallbackToSMS();
@@ -96,17 +94,15 @@ export default function FloatingShareButton() {
             console.warn("카카오 공유 실패 → SMS fallback", e);
             fallbackToSMS();
         }
-        setIsOpen(false); // 공유 후 메뉴 닫기
+        setIsOpen(false);
     };
 
-    // 4. 라인 공유 함수 (새로 추가됨)
+    // 4. 라인 공유 로직
     const shareToLine = () => {
         const url = encodeURIComponent(window.location.href);
         const text = encodeURIComponent("저희 결혼식에 초대합니다 💍\n청첩장을 확인해보세요!");
-        // 라인 공유 URL 스킴
         window.open(`https://line.me/R/msg/text/?${text}%0A${url}`, '_blank');
-
-        setIsOpen(false); // 공유 후 메뉴 닫기
+        setIsOpen(false);
     };
 
     const fallbackToSMS = () => {
@@ -114,7 +110,7 @@ export default function FloatingShareButton() {
         window.location.href = `sms:?body=${encodeURIComponent(text)}`;
     };
 
-    // 스타일 정의
+    // 스타일
     const baseWrapper = "fixed right-6 z-50 transition-all duration-500 ease-out will-change-transform flex flex-col items-center gap-3";
     const phaseStyle = {
         hidden: "pointer-events-none opacity-0 translate-y-6 bottom-4",
@@ -122,13 +118,13 @@ export default function FloatingShareButton() {
         show:   "opacity-100 translate-y-0 bottom-6",
     };
 
-    // 작은 버튼들 스타일
+    // 하위 버튼 공통 스타일
     const subButtonStyle = `w-10 h-10 flex items-center justify-center rounded-full shadow-md bg-white border transition-all duration-300 transform ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-50 opacity-0 translate-y-8 pointer-events-none'}`;
 
     return (
         <div className={`${baseWrapper} ${phaseStyle[phase]}`}>
 
-            {/* 옵션 버튼 그룹 (라인 & 카카오) */}
+            {/* 펼쳐지는 버튼들 */}
             <div className={`flex flex-col gap-3 ${isOpen ? 'mb-2' : 'mb-0'}`}>
 
                 {/* 라인 버튼 */}
@@ -136,11 +132,10 @@ export default function FloatingShareButton() {
                     onClick={shareToLine}
                     className={subButtonStyle}
                     aria-label="라인으로 공유하기"
-                    style={{ transitionDelay: isOpen ? '100ms' : '0ms' }} // 순차 등장 효과
+                    style={{ transitionDelay: isOpen ? '100ms' : '0ms' }}
                 >
-                    {/* 라인 아이콘: 이미지가 있다면 img 태그 사용, 없다면 아래 텍스트나 SVG 사용 */}
-                    <span className="text-[10px] font-bold text-[#06C755]">LINE</span>
-                    {/* <img src={lineIcon} alt="Line" className="w-6 h-6" /> */}
+                    {/* 라인 브랜드 컬러 (#06C755) 텍스트 */}
+                    <span className="text-[10px] font-bold text-[#06C755] tracking-tighter">LINE</span>
                 </button>
 
                 {/* 카카오 버튼 */}
@@ -150,7 +145,8 @@ export default function FloatingShareButton() {
                     aria-label="카카오톡으로 공유하기"
                     style={{ transitionDelay: isOpen ? '0ms' : '50ms' }}
                 >
-                    <img src={kakaoIcon} alt="Kakao" className="w-5 h-5" />
+                    {/* 카카오 브랜드 컬러 (#3C1E1E) 텍스트 */}
+                    <span className="text-[9px] font-bold text-[#3C1E1E] tracking-tighter">KAKAO</span>
                 </button>
             </div>
 
@@ -160,19 +156,13 @@ export default function FloatingShareButton() {
                 className={`w-12 h-12 flex items-center justify-center rounded-full border bg-white/90 shadow-md hover:bg-neutral-100 transition-transform duration-300 ${isOpen ? 'rotate-45' : 'rotate-0'}`}
                 aria-label="공유 메뉴 열기"
             >
-                {isOpen ? (
-                    // 닫기(X) 아이콘 효과를 위해 + 아이콘을 45도 회전시킴 (위 클래스에서 rotate-45 처리)
-                    <PlusIcon />
-                ) : (
-                    // 평소에는 공유 아이콘
-                    <ShareIcon />
-                )}
+                {isOpen ? <PlusIcon /> : <ShareIcon />}
             </button>
         </div>
     );
 }
 
-// 간단한 SVG 아이콘 컴포넌트들
+// 아이콘 컴포넌트
 function PlusIcon() {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-600">
