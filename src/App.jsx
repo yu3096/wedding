@@ -13,7 +13,7 @@ import Guestbook from '@/components/Guestbook.jsx'
 import Appreciation from '@/components/Appreciation.jsx'
 import { WeddingInfoProvider, useWeddingInfo } from '@/context/WeddingInfoProvider.jsx'
 import { parseDateStr } from "@/lib/dateFormat.js";
-import FloatingKakaoShareButton from "@/components/Share/FloatingKakaoShareButton.jsx";
+import FloatingKakaoShareButton from "@/components/Share/FloatingShareButton.jsx";
 import { initGA } from "@/lib/ga.js";
 
 export default function App() {

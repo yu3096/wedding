@@ -167,7 +167,7 @@ export default function Gallery({ bucket, dir, expiresIn = 300 }) {
             >
                 <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리의 순간</p>
                 <h2 className="mt-2 font-serif text-3xl sm:text-4xl">
-                    사진을 터치하시면 더 큰 이미지로 감상하실 수 있어요.
+                    사진을 터치하시면 더 큰 이미지로<br />감상하실 수 있어요.
                 </h2>
             </div>
 
