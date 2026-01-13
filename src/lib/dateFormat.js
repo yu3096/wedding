@@ -1,9 +1,12 @@
 /** YYYYMMDD → Date (로컬 TZ, 안전 파싱) */
 export function parseYYYYMMDD(yyyymmdd) {
-  if (!/^\d{8}$/.test(yyyymmdd)) throw new Error("Invalid YYYYMMDD format");
-  const y = +yyyymmdd.slice(0, 4);
-  const m = +yyyymmdd.slice(4, 6) - 1; // 0-based
-  const d = +yyyymmdd.slice(6, 8);
+  // 숫자만 추출
+  const clean = String(yyyymmdd).replace(/\D/g, "");
+
+  if (!/^\d{8}$/.test(clean)) throw new Error(`Invalid YYYYMMDD format: ${yyyymmdd}`);
+  const y = +clean.slice(0, 4);
+  const m = +clean.slice(4, 6) - 1; // 0-based
+  const d = +clean.slice(6, 8);
   const date = new Date(y, m, d);
   if (date.getFullYear() !== y || date.getMonth() !== m || date.getDate() !== d) {
     throw new Error("Invalid calendar date");
@@ -69,17 +72,17 @@ export function format(yyyymmdd, mask, opts = {}) {
   let out = masked.replace(tokens, (t) => {
     switch (t) {
       case "YYYY": return String(yyyy);
-      case "YY":   return String(yyyy).slice(-2);
+      case "YY": return String(yyyy).slice(-2);
       case "MMMM": return monthLong;
-      case "MMM":  return monthShort;
-      case "MM":   return pad2(mm);
-      case "M":    return String(mm);
-      case "DD":   return pad2(dd);
-      case "D":    return String(dd);
+      case "MMM": return monthShort;
+      case "MM": return pad2(mm);
+      case "M": return String(mm);
+      case "DD": return pad2(dd);
+      case "D": return String(dd);
       case "dddd": return weekdayLong;
-      case "ddd":  return weekdayShort;
-      case "E":    return String(E);
-      default:     return t;
+      case "ddd": return weekdayShort;
+      case "E": return String(E);
+      default: return t;
     }
   });
 
@@ -119,9 +122,10 @@ export function getWeekdayName(yyyymmdd, { locale = "ko-KR", style = "short" } =
 }
 
 export function parseDateStr(yyyymmdd) {
+  const clean = String(yyyymmdd).replace(/\D/g, "");
   return {
-    year: Number(yyyymmdd.substring(0, 4)),
-    month: Number(yyyymmdd.substring(4, 6)),
-    day: Number(yyyymmdd.substring(6, 8)),
+    year: Number(clean.substring(0, 4)),
+    month: Number(clean.substring(4, 6)),
+    day: Number(clean.substring(6, 8)),
   };
 }
