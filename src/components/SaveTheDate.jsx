@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
 import useReveal from './useReveal'
+import { useWeddingInfo } from "@/context/WeddingInfoProvider";
 
-const weekdays = ['일','월','화','수','목','금','토']
+const weekdays = ['일', '월', '화', '수', '목', '금', '토']
 
 function getDday({ year, month, day }) {
   // month: 1~12
@@ -19,6 +20,7 @@ function getDday({ year, month, day }) {
 }
 
 export default function SaveTheDate({ year, month, day }) {
+  const { wedding, names } = useWeddingInfo();
   const first = useMemo(() => new Date(year, month - 1, 1), [year, month])
   const last = useMemo(() => new Date(year, month, 0), [year, month])
   const leading = first.getDay()
@@ -29,69 +31,69 @@ export default function SaveTheDate({ year, month, day }) {
   const { ref, visible } = useReveal()
   const dday = getDday({ year, month, day })
 
-     // 표기 문자열 (요청 포맷)
-     const dText =
-       dday.kind === 'future'
-         ? `예식까지 ${dday.n}일`
-         : dday.kind === 'today'
-         ? '예식 당일💕'
-         : `예식 이후 ${dday.n}일`;
+  // 표기 문자열 (요청 포맷)
+  const dText =
+    dday.kind === 'future'
+      ? `예식까지 ${dday.n}일`
+      : dday.kind === 'today'
+        ? '예식 당일💕'
+        : `예식 이후 ${dday.n}일`;
 
-     return (
-       <section ref={ref} id="save-the-date" className="py-16 sm:py-24 container mx-auto px-4">
-         <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-           <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리의 순간</p>
-           <h2 className="mt-2 text-3xl sm:text-4xl font-serif">
-             {year}. {String(month).padStart(2,'0')}. {String(day).padStart(2,'0')}
-           </h2>
-           <p className="mt-2 text-neutral-600">오전 11시 00분 · 더컨벤션 반포</p>
+  return (
+    <section ref={ref} id="save-the-date" className="py-16 sm:py-24 container mx-auto px-4">
+      <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+        <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리의 순간</p>
+        <h2 className="mt-2 text-3xl sm:text-4xl font-serif">
+          {year}. {String(month).padStart(2, '0')}. {String(day).padStart(2, '0')}
+        </h2>
+        <p className="mt-2 text-neutral-600">{wedding.weddingTime} · {wedding.weddingHall}</p>
 
-           {/* ✅ 달력 + D-뱃지 래퍼 (relative) */}
-           <div className="mt-8 relative">
-             {/* 달력 박스 */}
-             <div className="border rounded-2xl overflow-hidden shadow-sm">
-               <div className="grid grid-cols-7 text-center bg-neutral-50/60 text-sm">
-                 {['일','월','화','수','목','금','토'].map((w) => (
-                   <div key={w} className={`py-3 ${w==='일' ? 'text-rose-600' : w==='토' ? 'text-sky-600' : 'text-neutral-700'}`}>{w}</div>
-                 ))}
-               </div>
-               <div className="grid grid-cols-7 divide-x divide-y">
-                 {cells.map((d, idx) => {
-                   const isTarget = d === day;
-                   const weekday = d ? new Date(year, month - 1, d).getDay() : null;
-                   return (
-                     <div key={idx} className="aspect-[1/0.8] flex items-center justify-center text-sm">
-                       {d && (
-                         <div className={`w-9 h-9 flex items-center justify-center rounded-full ${
-                           isTarget ? 'bg-black text-white font-semibold'
-                           : weekday === 0 ? 'text-rose-600'
-                           : weekday === 6 ? 'text-sky-600'
-                           : 'text-neutral-800'
-                         }`}>
-                           {d}
-                         </div>
-                       )}
-                     </div>
-                   );
-                 })}
-               </div>
-             </div>
+        {/* ✅ 달력 + D-뱃지 래퍼 (relative) */}
+        <div className="mt-8 relative">
+          {/* 달력 박스 */}
+          <div className="border rounded-2xl overflow-hidden shadow-sm">
+            <div className="grid grid-cols-7 text-center bg-neutral-50/60 text-sm">
+              {['일', '월', '화', '수', '목', '금', '토'].map((w) => (
+                <div key={w} className={`py-3 ${w === '일' ? 'text-rose-600' : w === '토' ? 'text-sky-600' : 'text-neutral-700'}`}>{w}</div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 divide-x divide-y">
+              {cells.map((d, idx) => {
+                const isTarget = d === day;
+                const weekday = d ? new Date(year, month - 1, d).getDay() : null;
+                return (
+                  <div key={idx} className="aspect-[1/0.8] flex items-center justify-center text-sm">
+                    {d && (
+                      <div
+                        className={`w-9 h-9 flex items-center justify-center rounded-full transition-transform ${isTarget ? 'bg-black text-white font-semibold'
+                          : weekday === 0 ? 'text-rose-600'
+                            : weekday === 6 ? 'text-sky-600'
+                              : 'text-neutral-800'
+                          }`}>
+                        {d}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-             {/* ✅ 달력 “밖” 우측 하단 뱃지 (absolute) */}
-             <div className="absolute right-0 -bottom-3 md:-bottom-4 select-none" aria-live="polite">
-               <span
-                 className={[
-                   "inline-flex items-center px-3 py-1.5 rounded-full text-xs",
-                   "bg-white/85 backdrop-blur border border-neutral-200 shadow-sm",
-                   "text-neutral-700"
-                 ].join(' ')}
-                 title={dText}
-               >
-                 {dText}
-               </span>
-             </div>
-           </div>
-         </div>
-       </section>
-     );
-   }
+          {/* ✅ 달력 “밖” 우측 하단 뱃지 (absolute) */}
+          <div className="absolute right-0 -bottom-3 md:-bottom-4 select-none" aria-live="polite">
+            <span
+              className={[
+                "inline-flex items-center px-3 py-1.5 rounded-full text-xs",
+                "bg-white/85 backdrop-blur border border-neutral-200 shadow-sm",
+                "text-neutral-700"
+              ].join(' ')}
+              title={dText}
+            >
+              {dText}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

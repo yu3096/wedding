@@ -66,9 +66,8 @@ export default function Accounts() {
   return (
     <section ref={ref} id="accounts" className="py-16 sm:py-24 bg-neutral-50">
       <div
-        className={`container mx-auto px-4 transition-all duration-700 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        className={`container mx-auto px-4 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
       >
         {/* 헤더 */}
         <div className="text-center">
@@ -156,28 +155,33 @@ export default function Accounts() {
                         >
                           {/* 첫 번째 줄: role + 복사 버튼 */}
                           <div className="flex items-center justify-between">
-                            <span
-                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] ${theme.chip}`}
-                            >
-                              {acc.role}
-                            </span>
-                            <CopyButton text={`${acc.bank} ${acc.num} ${acc.name}`}
-                                        onCopied={() =>
-                                            trackEvent("account_copy", {
-                                                event_category: "accounts",
-                                                event_label: `${acc.role} ${acc.name}`,
-                                            })}
+                            {acc.role && (
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] ${theme.chip}`}
+                              >
+                                {acc.role}
+                              </span>
+                            )}
+                            <CopyButton
+                              text={`${acc.bank} ${acc.account} ${acc.name}`}
+                              label="복사하기"
+                              successLabel="복사완료"
+                              onCopied={() =>
+                                trackEvent("account_copy", {
+                                  event_category: "accounts",
+                                  event_label: `${acc.role || 'unknown'} ${acc.name}`,
+                                })}
                             />
                           </div>
 
                           {/* 두 번째 줄: 은행 + 예금주 */}
-                          <div className="text-neutral-900 font-medium mt-2">
+                          <div className="text-neutral-900 font-medium mt-1">
                             {acc.bank} · {acc.name}
                           </div>
 
                           {/* 세 번째 줄: 계좌번호 */}
                           <div className="font-mono text-[15px] sm:text-base break-all text-neutral-800 mt-1">
-                            {acc.num}
+                            {acc.account}
                           </div>
                         </li>
                       ))
