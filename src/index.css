@@ -3,14 +3,26 @@
 @tailwind utilities;
 
 /* Smooth scroll */
-html { scroll-behavior: smooth; }
-.calligraphy{font-family: 'NanumSonPyeonJiCe';}
+html {
+  scroll-behavior: smooth;
+}
+
+.calligraphy {
+  font-family: 'NanumSonPyeonJiCe';
+}
 
 
 /* 글자 단위 stagger 애니메이션 */
 @keyframes charFadeUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 svg .char {
@@ -19,29 +31,48 @@ svg .char {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  svg .char { animation: none; opacity: 1; transform: none; }
+  svg .char {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .scroll-indicator {
   opacity: 0;
   animation: fadeIn 800ms ease-out forwards;
-  animation-delay: 1s; /* 1초 뒤에 나타남 */
+  animation-delay: 1s;
+  /* 1초 뒤에 나타남 */
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-indicator { animation: none; opacity: 1; }
+  .scroll-indicator {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 /* 뷰포트 꽉 채우는 래퍼 */
-.hero-fullbleed { min-height: 100dvh; }
-@supports (min-height: 100svh) {
-  .hero-fullbleed { min-height: 100svh; }
+.hero-fullbleed {
+  min-height: 100dvh;
 }
+
+@supports (min-height: 100svh) {
+  .hero-fullbleed {
+    min-height: 100svh;
+  }
+}
+
 /* 최후 폴백: --vh 사용 중이면 함께 둡니다
 .hero-fullbleed { min-height: calc(var(--vh, 1vh) * 100); }
 */

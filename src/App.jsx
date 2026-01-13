@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import ScrollProgress from '@/components/ScrollProgress.jsx'
-import Hero from '@/components/Hero.jsx'
 import HeroFullBleed from '@/components/HeroFullBleed.jsx'
 import SaveTheDate from '@/components/SaveTheDate.jsx'
 import Invitation from '@/components/Invitation.jsx'
@@ -17,30 +16,29 @@ import FloatingKakaoShareButton from "@/components/Share/FloatingShareButton.jsx
 import { initGA } from "@/lib/ga.js";
 
 export default function App() {
-  const { wedding, images} = useWeddingInfo();
+  const { wedding, images } = useWeddingInfo();
   const dateObj = parseDateStr(wedding.weddingDate);
 
-    useEffect(() => {
-        initGA();
-    }, []);
+  useEffect(() => {
+    initGA();
+  }, []);
 
   return (
     <div className="min-h-screen antialiased text-neutral-900 bg-white app-root">
-        <ScrollProgress />
+      <ScrollProgress />
 
-        <HeroFullBleed />
-        {/*<Hero />*/}
-        <Invitation />
-        <SaveTheDate year={dateObj.year} month={dateObj.month} day={dateObj.day} />
-        <Gallery bucket="wedding-bucket" dir="mobile-img/gallery" />
-        <Maps />
-        <Transport />
-        <Accounts />
-        <Guestbook />
-        <Appreciation />
-        <Footer />
+      <HeroFullBleed />
+      <Invitation />
+      <SaveTheDate year={dateObj.year} month={dateObj.month} day={dateObj.day} />
+      <Gallery bucket="wedding-bucket" dir="mobile-img/gallery" />
+      <Maps />
+      <Transport />
+      <Accounts />
+      <Guestbook />
+      <Appreciation />
+      <Footer />
 
-        <FloatingKakaoShareButton imageUrl={images.thumbnail} />
+      <FloatingKakaoShareButton imageUrl={images.thumbnail} />
     </div>
   )
 }
