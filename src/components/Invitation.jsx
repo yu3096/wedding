@@ -2,16 +2,22 @@ import React from 'react'
 import useReveal from './useReveal'
 import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 
+import { getJosa } from "@/lib/hangul";
+
 export default function Invitation() {
   const { ref, visible } = useReveal();
   const { names } = useWeddingInfo();
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const targetText = queryParams.get("target") || "소중한 분들";
+  const particle = getJosa(targetText, "과/와");
 
   return (
     <section ref={ref} id="invitation" className="py-16 sm:py-24 container mx-auto px-4">
       <div className={`max-w-2xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">함께해 주세요</p>
         <p className="mt-4 text-neutral-600 leading-7">
-          소중한 분들과 함께하고 싶습니다.<br />
+          {targetText}{particle} 함께하고 싶습니다.<br />
           함께하는 기쁨을 알게 해 준 사람을 만나 이제는 저희 둘,<br />
           인생의 모든 날을 함께하고자 합니다.<br />
           <br />

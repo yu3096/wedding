@@ -4,7 +4,7 @@ import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
 function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
 
 export default function FloatingShareButton() {
-    const { wedding } = useWeddingInfo();
+    const { wedding, images, names } = useWeddingInfo();
 
     // 스크롤 및 메뉴 상태 관리
     const [phase, setPhase] = useState("hidden"); // 'hidden' | 'peek' | 'show'
@@ -73,8 +73,9 @@ export default function FloatingShareButton() {
             window.Kakao.Share.sendDefault({
                 objectType: "feed",
                 content: {
-                    title: "저희 결혼식에 초대합니다 💍",
-                    description: "청첩장을 확인해보세요!",
+                    title: `${names.groomName} ❤️ ${names.brideName} 결혼합니다`,
+                    description: `${wedding.weddingDate} ${wedding.weddingTime} | ${wedding.weddingHall}`,
+                    imageUrl: images.thumbnail,
                     link: {
                         mobileWebUrl: window.location.href,
                         webUrl: window.location.href,
@@ -114,8 +115,8 @@ export default function FloatingShareButton() {
     const baseWrapper = "fixed right-6 z-50 transition-all duration-500 ease-out will-change-transform flex flex-col items-center gap-3";
     const phaseStyle = {
         hidden: "pointer-events-none opacity-0 translate-y-6 bottom-4",
-        peek:   "opacity-70 translate-y-1 bottom-6",
-        show:   "opacity-100 translate-y-0 bottom-6",
+        peek: "opacity-70 translate-y-1 bottom-6",
+        show: "opacity-100 translate-y-0 bottom-6",
     };
 
     // 하위 버튼 공통 스타일
