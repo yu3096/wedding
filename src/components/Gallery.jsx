@@ -9,7 +9,7 @@ import { getSignedUrlsInDir } from "@/lib/supabase-storage.js";
  * - props.dir:     버킷 내 디렉토리 경로 (예: "gallery/wedding") (필수)
  * - props.expiresIn: URL 만료(초). 기본 300초(5분) 권장
  */
-export default function Gallery({ bucket, dir, expiresIn = 300 }) {
+export default function Gallery({ bucket, dir, expiresIn = 300, onLoadComplete }) {
     const { ref, visible } = useReveal();
 
     // 서명 URL 이미지 목록 [{ path, signedUrl }]
@@ -30,21 +30,21 @@ export default function Gallery({ bucket, dir, expiresIn = 300 }) {
     const lockBodyScroll = useCallback(() => {
         if (_unlockersRef.current) return;
 
-        const html = document.documentElement;
-        const body = document.body;
-        const sbw = window.innerWidth - html.clientWidth;
-        if (sbw > 0) {
-            html.style.paddingRight = `${sbw}px`;
-            body.style.paddingRight = `${sbw}px`;
-        }
-        html.style.overflow = "hidden";
-        body.style.overflow = "hidden";
+        // const html = document.documentElement;
+        // const body = document.body;
+        // const sbw = window.innerWidth - html.clientWidth;
+        // if (sbw > 0) {
+        //     html.style.paddingRight = `${sbw}px`;
+        //     body.style.paddingRight = `${sbw}px`;
+        // }
+        // html.style.overflow = "hidden";
+        // body.style.overflow = "hidden";
 
         const preventScroll = (e) => {
             if (e.type === "keydown") {
                 const blockedKeys = new Set([
-                    "ArrowUp","ArrowDown","ArrowLeft","ArrowRight",
-                    "PageUp","PageDown","Home","End"," ",
+                    "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+                    "PageUp", "PageDown", "Home", "End", " ",
                 ]);
                 if (blockedKeys.has(e.key)) e.preventDefault();
             } else {
@@ -56,10 +56,10 @@ export default function Gallery({ bucket, dir, expiresIn = 300 }) {
         document.addEventListener("keydown", preventScroll);
 
         _unlockersRef.current = () => {
-            html.style.overflow = "";
-            body.style.overflow = "";
-            html.style.paddingRight = "";
-            body.style.paddingRight = "";
+            // html.style.overflow = "";
+            // body.style.overflow = "";
+            // html.style.paddingRight = "";
+            // body.style.paddingRight = "";
             document.removeEventListener("wheel", preventScroll);
             document.removeEventListener("touchmove", preventScroll);
             document.removeEventListener("keydown", preventScroll);
@@ -86,7 +86,10 @@ export default function Gallery({ bucket, dir, expiresIn = 300 }) {
                 if (!mounted) return;
                 setLoadError(err?.message || "이미지를 불러오는 중 오류가 발생했습니다.");
             } finally {
-                if (mounted) setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                    onLoadComplete?.();
+                }
             }
         }
 
@@ -152,7 +155,7 @@ export default function Gallery({ bucket, dir, expiresIn = 300 }) {
                 event_category: "gallery",
                 event_label: `idx-${idx}`,
             });
-        } catch {}
+        } catch { }
     }, []);
     const closeModal = useCallback(() => setActiveIndex(null), []);
 
@@ -161,9 +164,8 @@ export default function Gallery({ bucket, dir, expiresIn = 300 }) {
         <section ref={ref} id="gallery" className="py-16 sm:py-24 container mx-auto px-4">
             {/* 타이틀 */}
             <div
-                className={`max-w-3xl mx-auto text-center transition-all duration-700 ${
-                    visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-                }`}
+                className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                    }`}
             >
                 <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리의 순간</p>
                 <h2 className="mt-2 font-serif text-3xl sm:text-4xl">

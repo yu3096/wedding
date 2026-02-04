@@ -19,18 +19,30 @@ export default function App() {
   const { wedding, images } = useWeddingInfo();
   const dateObj = parseDateStr(wedding.weddingDate);
 
+  const [isIntroComplete, setIsIntroComplete] = React.useState(false);
+  const [isGalleryLoaded, setIsGalleryLoaded] = React.useState(false);
+
   useEffect(() => {
     initGA();
   }, []);
 
   return (
     <div className="min-h-screen antialiased text-neutral-900 bg-white app-root">
-      <ScrollProgress />
+      <div className={`transition-opacity duration-1000 ${isIntroComplete ? 'opacity-100' : 'opacity-0'}`}>
+        <ScrollProgress />
+      </div>
 
-      <HeroFullBleed />
+      <HeroFullBleed
+        onIntroComplete={() => setIsIntroComplete(true)}
+        isGalleryLoaded={isGalleryLoaded}
+      />
       <Invitation />
       <SaveTheDate year={dateObj.year} month={dateObj.month} day={dateObj.day} />
-      <Gallery bucket="wedding-bucket" dir="mobile-img/gallery" />
+      <Gallery
+        bucket="wedding-bucket"
+        dir="mobile-img/gallery"
+        onLoadComplete={() => setIsGalleryLoaded(true)}
+      />
       <Maps />
       <Transport />
       <Accounts />

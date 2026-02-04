@@ -2,7 +2,7 @@ import React from "react";
 import SvgStaggerText from "@/components/SvgStaggerText";
 import { getJosa } from "@/lib/hangul";
 
-export default function Intro() {
+export default function Intro({ percent = 0 }) {
     // ⬇️ Lock scroll while Intro is visible
     React.useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -52,6 +52,22 @@ export default function Intro() {
                     step={30}
                     className="fill-white/40 font-sans font-light tracking-wider"
                     style={{ fontSize: "10px" }}
+                />
+
+                {/* ⬇️ Loading Bar */}
+                <rect
+                    x="620"
+                    y="750"
+                    width="200"
+                    height="1"
+                    className="fill-white/30"
+                />
+                <rect
+                    x="620"
+                    y="750"
+                    width={200 * (percent / 100)}
+                    height="1"
+                    className="fill-white/90 transition-[width] duration-300 ease-out"
                 />
             </svg>
         </div>
