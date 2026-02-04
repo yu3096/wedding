@@ -25,7 +25,7 @@ jobs:
       # --- 웨딩홀
       VITE_WEDDING_DATE: ${{ vars.VITE_WEDDING_DATE }}
       VITE_WEDDING_TIME: ${{ vars.VITE_WEDDING_TIME }}
-      VITE_WEDDING_HOLE: ${{ vars.VITE_WEDDING_HOLE }}
+      VITE_WEDDING_HALL: ${{ vars.VITE_WEDDING_HALL }}
       VITE_WEDDING_ADDR: ${{ vars.VITE_WEDDING_ADDR }}
 
       VITE_WEDDING_SUBWAY: ${{ vars.VITE_WEDDING_SUBWAY }}
