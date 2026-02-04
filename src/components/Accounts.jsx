@@ -48,12 +48,33 @@ export default function Accounts() {
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && beginClose();
+
     if (modal.open) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
+      // 스크롤 잠금 (이벤트 차단 방식)
+      const preventScroll = (e) => {
+        // 모달 내부 스크롤 허용
+        if (e.target.closest("#account-layer")) return;
+
+        if (e.type === "keydown") {
+          const blockedKeys = new Set([
+            "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+            "PageUp", "PageDown", "Home", "End", " "
+          ]);
+          if (blockedKeys.has(e.key)) e.preventDefault();
+        } else {
+          e.preventDefault();
+        }
+      };
+
+      document.addEventListener("wheel", preventScroll, { passive: false });
+      document.addEventListener("touchmove", preventScroll, { passive: false });
+      document.addEventListener("keydown", preventScroll);
       window.addEventListener("keydown", onKey);
+
       return () => {
-        document.body.style.overflow = prev;
+        document.removeEventListener("wheel", preventScroll);
+        document.removeEventListener("touchmove", preventScroll);
+        document.removeEventListener("keydown", preventScroll);
         window.removeEventListener("keydown", onKey);
       };
     }
@@ -125,7 +146,7 @@ export default function Accounts() {
               }}
             >
               <div
-                className={`w-full sm:w-[560px] max-w-[92vw] bg-white rounded-2xl border shadow-xl
+                className={`w-full sm:w-[560px] max-w-[92vw] max-h-[90vh] overflow-y-auto overscroll-contain bg-white rounded-2xl border shadow-xl
                             transition-all duration-200
                             ${animVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"} ${theme.ring}`}
               >

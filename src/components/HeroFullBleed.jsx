@@ -10,7 +10,7 @@ import { ProgressOverlay } from "@/components/Media/ProgressBar.jsx"
 
 import Intro from "@/components/Intro";
 
-export default function HeroFullBleed() {
+export default function HeroFullBleed(props) {
     const { names, wedding } = useWeddingInfo();
     const [signedUrl, setSignedUrl] = useState(null);
 
@@ -24,16 +24,25 @@ export default function HeroFullBleed() {
     const { objectUrl, status, percent, mode } = useImageProgress(signedUrl);
     const isLoaded = status === "loaded";
 
-    // ⬇️ Timer for Intro Sequence
-    const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+    // ⬇️ Intro Finish Condition
+    // 1. Hero Image Loaded
+    // 2. Gallery List Loaded (if provided)
+    const galleryLoaded = props.isGalleryLoaded !== undefined ? props.isGalleryLoaded : true;
+    const allConditionsMet = isLoaded && galleryLoaded;
+    const showMainContent = allConditionsMet;
+
+    // ⬇️ Display Percent Logic
+    // 이미지가 다 로딩되었어도(percent === 100), 다른 조건(시간, 갤러리)이 안 맞으면 99%에서 대기
+    let displayPercent = percent;
+    if (percent >= 100 && !allConditionsMet) {
+        displayPercent = 99;
+    }
 
     useEffect(() => {
-        const timer = setTimeout(() => setMinTimeElapsed(true), 2500);
-        return () => clearTimeout(timer);
-    }, []);
-
-    // ⬇️ Intro Finish Condition (Image Loaded + Time Elapsed)
-    const showMainContent = isLoaded && minTimeElapsed;
+        if (showMainContent && props.onIntroComplete) {
+            props.onIntroComplete();
+        }
+    }, [showMainContent, props.onIntroComplete]);
 
     return (
         <section id="heroFullBleed" className="hero-fullbleed relative bg-black overflow-hidden">
@@ -53,8 +62,10 @@ export default function HeroFullBleed() {
                 fit="cover"
             />
 
-            {/* 진행 바 오버레이 */}
-            {!isLoaded && (signedUrl ? <ProgressOverlay percent={percent} mode={mode} /> : null)}
+            {/* 진행 바 오버레이: Intro가 로딩바 역할을 하므로 제거함 */}
+            {/* {allConditionsMet ? null : (
+                !isLoaded && signedUrl ? <ProgressOverlay percent={percent} mode={mode} /> : null
+            )} */}
 
             <div className="absolute inset-0 bg-black/30" />
 
@@ -63,7 +74,7 @@ export default function HeroFullBleed() {
 
             {/* ⬇️ Render Intro OR Main Content */}
             {!showMainContent ? (
-                <Intro />
+                <Intro percent={displayPercent} mode={mode} />
             ) : (
                 <svg
                     className="absolute inset-0 w-full h-full pointer-events-none fadeIn"
