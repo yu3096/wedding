@@ -78,7 +78,7 @@ export default function HeroFullBleed(props) {
 
             {/* ⬇️ Render Intro OR Main Content */}
             {!showMainContent ? (
-                <Intro percent={displayPercent} mode={mode} isOpen={isOpen} />
+                <Intro percent={displayPercent} mode={mode} isOpen={isOpen} wedding={wedding} />
             ) : (
                 <svg
                     className="absolute inset-0 w-full h-full pointer-events-none fadeIn"
