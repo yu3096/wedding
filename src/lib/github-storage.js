@@ -10,7 +10,10 @@
  */
 export function getGithubImageUrl(path) {
     const cleanPath = String(path).replace(/^\/+/, "");
-    return `/${cleanPath}`;
+    // BASE_URL은 기본적으로 '/' 이며, vite.config의 base 지정 시 '/wedding/' 등이 됩니다.
+    // 따라서 BASE_URL과 파일 경로를 안전하게 조합합니다.
+    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+    return `${baseUrl}/${cleanPath}`;
 }
 
 /**
@@ -26,8 +29,10 @@ export function getGithubGalleryImages() {
     ];
 
     // mobile-img/gallery/ 경로를 붙여 배열로 반환
+    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+
     return fileNames.map(fileName => {
         const cleanPath = `mobile-img/gallery/${fileName.replace(/^\/+/, '')}`;
-        return `/${cleanPath}`;
+        return `${baseUrl}/${cleanPath}`;
     });
 }
