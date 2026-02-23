@@ -4,31 +4,35 @@ import SvgStaggerText from "@/components/SvgStaggerText";
 import ResponsivePicture from "@/components/Media/ResponsivePicture";
 import { useWeddingInfo } from "@/context/WeddingInfoProvider";
 import { format, DATE_PRESETS } from "@/lib/dateFormat.js";
-import { getSignedUrl } from "@/lib/supabase-storage.js";
+import { getGithubImageUrl } from "@/lib/github-storage.js";
 import useImageProgress from "@/lib/useImageProgress";
 import { ProgressOverlay } from "@/components/Media/ProgressBar.jsx"
 
 import Intro from "@/components/Intro";
 
 export default function HeroFullBleed(props) {
-    const { names, wedding } = useWeddingInfo();
-    const [signedUrl, setSignedUrl] = useState(null);
+    const { names, wedding, isOpen } = useWeddingInfo();
+    // 동기식으로 대상 URL 바로 가져옴
+    const imageUrl = getGithubImageUrl("mobile-img/Hero.jpg");
 
-    useEffect(() => {
-        getSignedUrl("wedding-bucket", "mobile-img/Hero.jpg", 60)
-            .then(setSignedUrl)
-            .catch(console.error);
-    }, []);
-
-    // ⬇️ 새로 추가: 서명 URL을 스트리밍 로딩해 Blob Object URL 생성 + 진행률 추적
-    const { objectUrl, status, percent, mode } = useImageProgress(signedUrl);
+    // ⬇️ 스트리밍 로딩해 Blob Object URL 생성 + 진행률 추적
+    const { objectUrl, status, percent, mode } = useImageProgress(imageUrl);
     const isLoaded = status === "loaded";
+
+    // ⬇️ 최소 유지 시간 보장 (예: 2500ms)
+    const [isMinTimePassed, setIsMinTimePassed] = useState(false);
+    useEffect(() => {
+        const timer = setTimeout(() => setIsMinTimePassed(true), 2500);
+        return () => clearTimeout(timer);
+    }, []);
 
     // ⬇️ Intro Finish Condition
     // 1. Hero Image Loaded
     // 2. Gallery List Loaded (if provided)
+    // 3. Minimum Time Passed
+    // 4. 모바일 청첩장이 오픈 상태인지 확인
     const galleryLoaded = props.isGalleryLoaded !== undefined ? props.isGalleryLoaded : true;
-    const allConditionsMet = isLoaded && galleryLoaded;
+    const allConditionsMet = isLoaded && galleryLoaded && isMinTimePassed && isOpen;
     const showMainContent = allConditionsMet;
 
     // ⬇️ Display Percent Logic
@@ -74,7 +78,7 @@ export default function HeroFullBleed(props) {
 
             {/* ⬇️ Render Intro OR Main Content */}
             {!showMainContent ? (
-                <Intro percent={displayPercent} mode={mode} />
+                <Intro percent={displayPercent} mode={mode} isOpen={isOpen} />
             ) : (
                 <svg
                     className="absolute inset-0 w-full h-full pointer-events-none fadeIn"

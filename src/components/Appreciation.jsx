@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
 import ResponsivePicture from "@/components/Media/ResponsivePicture"
 import { useWeddingInfo } from "@/context/WeddingInfoProvider";
-import { getSignedUrl } from "@/lib/supabase-storage.js";
+import { getGithubImageUrl } from "@/lib/github-storage.js";
 import useImageProgress from "@/lib/useImageProgress";
-import { ProgressOverlay }  from "@/components/Media/ProgressBar.jsx"
+import { ProgressOverlay } from "@/components/Media/ProgressBar.jsx"
 
 export default function Appreciation() {
   const { names } = useWeddingInfo();
-  const [signedUrl, setSignedUrl] = useState(null);
+  // 동기식으로 대상 URL 바로 가져옴
+  const imageUrl = getGithubImageUrl('mobile-img/Appreciation.jpg');
 
-  useEffect(() => {
-    getSignedUrl('wedding-bucket', 'mobile-img/Appreciation.jpg', 60)
-      .then(setSignedUrl)
-      .catch(console.error);
-  }, []);
-
-  // ⬇️ 새로 추가: 서명 URL을 스트리밍 로딩해 Blob Object URL 생성 + 진행률 추적
-  const { objectUrl, status, percent, mode } = useImageProgress(signedUrl);
+  // ⬇️ 스트리밍 로딩해 Blob Object URL 생성 + 진행률 추적
+  const { objectUrl, status, percent, mode } = useImageProgress(imageUrl);
 
   const isLoaded = status === "loaded";
 
@@ -86,13 +81,13 @@ export default function Appreciation() {
           decoding="async"
           className="absolute inset-0"
           imgClassName={
-              "w-full h-full object-cover block transition-opacity duration-700 " +
-              (isLoaded ? "opacity-100" : "opacity-0")
+            "w-full h-full object-cover block transition-opacity duration-700 " +
+            (isLoaded ? "opacity-100" : "opacity-0")
           }
           fit="cover"                              // ✅ 긴 축 기준
         />
 
-        {!isLoaded && (signedUrl ? <ProgressOverlay percent={percent} mode={mode} /> : null)}
+        {!isLoaded && <ProgressOverlay percent={percent} mode={mode} />}
 
         {/* 위쪽 그라데이션 */}
         <div className="pointer-events-none absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-white to-transparent" />

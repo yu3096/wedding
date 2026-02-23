@@ -1,21 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import useReveal from "./useReveal";
 import { trackEvent } from "@/lib/ga.js";
-import { getSignedUrlsInDir } from "@/lib/supabase-storage.js";
+import { getGithubGalleryImages } from "@/lib/github-storage.js";
 
 /**
- * Gallery (Supabase Signed URL 기반)
- * - props.bucket: Supabase 스토리지 버킷명 (필수)
- * - props.dir:     버킷 내 디렉토리 경로 (예: "gallery/wedding") (필수)
- * - props.expiresIn: URL 만료(초). 기본 300초(5분) 권장
+ * Gallery (정적 URL 기반)
  */
-export default function Gallery({ bucket, dir, expiresIn = 300, onLoadComplete }) {
+export default function Gallery({ onLoadComplete }) {
     const { ref, visible } = useReveal();
 
-    // 서명 URL 이미지 목록 [{ path, signedUrl }]
-    const [images, setImages] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [loadError, setLoadError] = useState(null);
+    // 동기식 이미지 로딩
+    const [images] = useState(() =>
+        getGithubGalleryImages().map(url => ({ path: url, signedUrl: url }))
+    );
+    const loading = false;
+    const loadError = null;
 
     // 모달
     const [activeIndex, setActiveIndex] = useState(null);
@@ -70,40 +69,10 @@ export default function Gallery({ bucket, dir, expiresIn = 300, onLoadComplete }
         if (_unlockersRef.current) _unlockersRef.current();
     }, []);
 
-    // 이미지 불러오기 + 만료 전에 자동 갱신
+    // 컴포넌트 마운트 시 로드 완료됨을 알림
     useEffect(() => {
-        let mounted = true;
-        let refreshTimer = null;
-
-        async function fetchImages() {
-            try {
-                setLoading(true);
-                setLoadError(null);
-                const signed = await getSignedUrlsInDir(bucket, dir, expiresIn);
-                if (!mounted) return;
-                setImages(signed || []);
-            } catch (err) {
-                if (!mounted) return;
-                setLoadError(err?.message || "이미지를 불러오는 중 오류가 발생했습니다.");
-            } finally {
-                if (mounted) {
-                    setLoading(false);
-                    onLoadComplete?.();
-                }
-            }
-        }
-
-        fetchImages();
-
-        // 만료 전 재발급 (90% 지점에 갱신)
-        const refreshMs = Math.max(5, Math.floor(expiresIn * 0.9)) * 1000;
-        refreshTimer = setInterval(fetchImages, refreshMs);
-
-        return () => {
-            mounted = false;
-            if (refreshTimer) clearInterval(refreshTimer);
-        };
-    }, [bucket, dir, expiresIn]);
+        onLoadComplete?.();
+    }, [onLoadComplete]);
 
     // 모달 상태 따라 스크롤 잠금
     useEffect(() => {

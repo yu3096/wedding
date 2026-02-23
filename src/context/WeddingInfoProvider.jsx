@@ -41,6 +41,9 @@ export function WeddingInfoProvider({ children }) {
   //images
   const thumbnail = import.meta.env.VITE_THUMBNAIL || "";
 
+  // 오픈 여부 (기본값 true, "false"로 명시될 때만 닫힘)
+  const isOpen = import.meta.env.VITE_IS_OPEN !== "false";
+
   const value = useMemo(() => ({
     // 이름/가족
     names: {
@@ -50,7 +53,7 @@ export function WeddingInfoProvider({ children }) {
     },
     //웨딩홀 및 웨딩날짜
     wedding: {
-        weddingDate, weddingHall, weddingTime, weddingAddr, weddingBus, weddingCar, weddingSubway
+      weddingDate, weddingHall, weddingTime, weddingAddr, weddingBus, weddingCar, weddingSubway
     },
     // 계좌
     accounts: {
@@ -58,12 +61,13 @@ export function WeddingInfoProvider({ children }) {
       groomAccounts, brideAccounts,
     },
     images: {
-        thumbnail
-    }
+      thumbnail
+    },
+    isOpen
   }), [
     groomName, brideName, groomFather, groomMother, brideFather, brideMother,
     weddingDate, weddingHall, weddingTime, weddingAddr, weddingBus, weddingSubway, weddingCar,
-    groomSide, brideSide, groomAccounts, brideAccounts, thumbnail
+    groomSide, brideSide, groomAccounts, brideAccounts, thumbnail, isOpen
   ]);
 
   return (

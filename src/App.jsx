@@ -39,8 +39,6 @@ export default function App() {
       <Invitation />
       <SaveTheDate year={dateObj.year} month={dateObj.month} day={dateObj.day} />
       <Gallery
-        bucket="wedding-bucket"
-        dir="mobile-img/gallery"
         onLoadComplete={() => setIsGalleryLoaded(true)}
       />
       <Maps />
