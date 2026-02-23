@@ -41,8 +41,11 @@ export function WeddingInfoProvider({ children }) {
   //images
   const thumbnail = import.meta.env.VITE_THUMBNAIL || "";
 
-  // 오픈 여부 (기본값 true, "false"로 명시될 때만 닫힘)
-  const isOpen = import.meta.env.VITE_IS_OPEN !== "false";
+  // 오픈 여부 (기본값 true)
+  // .env 파일 등에서 따옴표("false", 'false')가 함께 붙어 들어오는 경우도 방어
+  const rawIsOpen = import.meta.env.VITE_IS_OPEN;
+  const cleanedIsOpen = String(rawIsOpen).replace(/['"]/g, '').trim().toLowerCase();
+  const isOpen = cleanedIsOpen !== "false";
 
   const value = useMemo(() => ({
     // 이름/가족
