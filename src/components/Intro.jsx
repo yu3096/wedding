@@ -2,7 +2,7 @@ import React from "react";
 import SvgStaggerText from "@/components/SvgStaggerText";
 import { getJosa } from "@/lib/hangul";
 
-export default function Intro({ percent = 0 }) {
+export default function Intro({ percent = 0, isOpen = true }) {
     // ⬇️ Lock scroll while Intro is visible
     React.useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -32,7 +32,7 @@ export default function Intro({ percent = 0 }) {
 
                 <SvgStaggerText
                     x="50%" y="42%"
-                    text={`DEAR. ${targetText}`}
+                    text={isOpen ? `DEAR. ${targetText}` : "COMING SOON"}
                     step={80}
                     className="fill-white/90 uppercase tracking-[0.2em] font-sans font-medium"
                     style={{ filter: "url(#shadow-intro)", fontSize: "clamp(20px, 7vw, 24px)" }}
@@ -40,7 +40,7 @@ export default function Intro({ percent = 0 }) {
 
                 <SvgStaggerText
                     x="50%" y="54%"
-                    text="소중한 당신을 초대합니다."
+                    text={isOpen ? "소중한 당신을 초대합니다." : "모바일 청첩장을 준비 중입니다."}
                     step={50}
                     className="fill-white/80 font-sans font-light tracking-widest"
                     style={{ filter: "url(#shadow-intro)", fontSize: "clamp(14px, 4vw, 16px)" }}
@@ -48,27 +48,31 @@ export default function Intro({ percent = 0 }) {
 
                 <SvgStaggerText
                     x="50%" y="90%"
-                    text="보다 더 나은 모바일청첩장을 위하여 로딩 완료 후, 페이지가 넘어갑니다."
+                    text={isOpen ? "보다 더 나은 모바일청첩장을 위하여 로딩 완료 후, 페이지가 넘어갑니다." : ""}
                     step={30}
                     className="fill-white/40 font-sans font-light tracking-wider"
                     style={{ fontSize: "10px" }}
                 />
 
                 {/* ⬇️ Loading Bar */}
-                <rect
-                    x="620"
-                    y="750"
-                    width="200"
-                    height="1"
-                    className="fill-white/30"
-                />
-                <rect
-                    x="620"
-                    y="750"
-                    width={200 * (percent / 100)}
-                    height="1"
-                    className="fill-white/90 transition-[width] duration-300 ease-out"
-                />
+                {isOpen && (
+                    <>
+                        <rect
+                            x="620"
+                            y="750"
+                            width="200"
+                            height="1"
+                            className="fill-white/30"
+                        />
+                        <rect
+                            x="620"
+                            y="750"
+                            width={200 * (percent / 100)}
+                            height="1"
+                            className="fill-white/90 transition-[width] duration-300 ease-out"
+                        />
+                    </>
+                )}
             </svg>
         </div>
     );

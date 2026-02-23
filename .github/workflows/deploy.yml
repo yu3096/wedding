@@ -13,6 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      VITE_IS_OPEN: ${{ vars.VITE_IS_OPEN }}
+      
       # 저장소 Actions 변수 주입
       VITE_BASE: ${{ vars.VITE_BASE }}
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
