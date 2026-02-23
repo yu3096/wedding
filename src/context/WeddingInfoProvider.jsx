@@ -42,10 +42,17 @@ export function WeddingInfoProvider({ children }) {
   const thumbnail = import.meta.env.VITE_THUMBNAIL || "";
 
   // 오픈 여부 (기본값 true)
-  // .env 파일 등에서 따옴표("false", 'false')가 함께 붙어 들어오는 경우도 방어
+  // 값이 아예 없거나(undefined), 'true' 이면 열림. 오직 명확한 'false'일 때만 닫힘.
   const rawIsOpen = import.meta.env.VITE_IS_OPEN;
-  const cleanedIsOpen = String(rawIsOpen).replace(/['"]/g, '').trim().toLowerCase();
-  const isOpen = cleanedIsOpen !== "false";
+  // 값이 주어지지 않았을 경우 기본으로 true 취급
+  let isOpen = true;
+
+  if (rawIsOpen !== undefined && rawIsOpen !== null) {
+    const cleanedIsOpen = String(rawIsOpen).replace(/['"]/g, '').trim().toLowerCase();
+    if (cleanedIsOpen === "false") {
+      isOpen = false;
+    }
+  }
 
   const value = useMemo(() => ({
     // 이름/가족
