@@ -93,7 +93,7 @@ export default function HeroFullBleed(props) {
                     </defs>
 
                     <SvgStaggerText
-                        x="50%" y="35%"
+                        x="50%" y="10%"
                         text="WE ARE GETTING MARRIED"
                         step={80}
                         className="fill-white/90 uppercase tracking-[0.4em] calligraphy"

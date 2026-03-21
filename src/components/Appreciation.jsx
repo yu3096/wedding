@@ -71,7 +71,8 @@ export default function Appreciation() {
           </p>
         </div>
       </div>
-      <div className="hero-fullbleed relative bg-black overflow-hidden">
+      <div className="relative w-full mt-8 sm:mt-12 overflow-hidden">
+        {/* 전체 화면을 채우지 않고 사진 비율 그대로 자연스럽게 보여주도록 간소화 */}
         <ResponsivePicture
           picture={objectUrl}
           alt="감사의 마음을 담은 사진"
@@ -79,21 +80,24 @@ export default function Appreciation() {
           fetchPriority="high"
           loading="eager"
           decoding="async"
-          className="absolute inset-0"
+          className="block w-full"
           imgClassName={
-            "w-full h-full object-cover block transition-opacity duration-700 " +
+            "w-full h-auto block transition-opacity duration-700 " +
             (isLoaded ? "opacity-100" : "opacity-0")
           }
-          fit="cover"                              // ✅ 긴 축 기준
         />
 
-        {!isLoaded && <ProgressOverlay percent={percent} mode={mode} />}
+        {!isLoaded && (
+          <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+            <ProgressOverlay percent={percent} mode={mode} />
+          </div>
+        )}
 
-        {/* 위쪽 그라데이션 */}
-        <div className="pointer-events-none absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-white to-transparent" />
+        {/* 위쪽 가장자리 블러(페이드) 효과 */}
+        <div className="pointer-events-none absolute top-0 left-0 w-full h-12 sm:h-20 bg-gradient-to-b from-white to-transparent" />
 
-        {/* 아래쪽 그라데이션 */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-white to-transparent" />
+        {/* 아래쪽 가장자리 블러(페이드) 효과 */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-12 sm:h-20 bg-gradient-to-t from-white to-transparent" />
       </div>
     </section>
   );
