@@ -31,7 +31,7 @@ export function getGithubGalleryImages() {
         'gallery_21.jpg', 'gallery_22.jpg', 'gallery_23.jpg', 'gallery_24.jpg', 'gallery_25.jpg',
         'gallery_26.jpg', 'gallery_27.jpg', 'gallery_28.jpg', 'gallery_29.jpg', 'gallery_30.jpg',
         'gallery_31.jpg', 'gallery_32.jpg', 'gallery_33.jpg', 'gallery_34.jpg', 'gallery_35.jpg',
-        'gallery_36.jpg', 'gallery_37.jpg'
+        'gallery_36.jpg'
     ];
 
     // mobile-img/gallery/ 경로를 붙여 배열로 반환
