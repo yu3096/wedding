@@ -28,22 +28,34 @@ export function getGithubGalleryImages() {
         'gallery_16.jpg',
         'gallery_06.jpg', 'gallery_07.jpg',
         'gallery_28.jpg', 'gallery_29.jpg',
-        'gallery_08.jpg', 'gallery_09.jpg', 'gallery_10.jpg',
-        'gallery_11.jpg', 'gallery_12.jpg', 'gallery_13.jpg', 'gallery_14.jpg', 'gallery_15.jpg',
+        'gallery_08.jpg', 'gallery_09.jpg',
+        { name: 'gallery_10.jpg', position: 'top' },
+        { name: 'gallery_11.jpg', position: 'top' }, { name: 'gallery_12.jpg', position: 'top' }, { name: 'gallery_13.jpg', position: 'top' },
+        'gallery_14.jpg', 'gallery_15.jpg',
         'gallery_20.jpg',
-        'gallery_21.jpg', 'gallery_22.jpg', 'gallery_23.jpg', 'gallery_24.jpg', 'gallery_25.jpg',
-        'gallery_26.jpg', 'gallery_17.jpg', 'gallery_18.jpg', 'gallery_19.jpg',
-        'gallery_31.jpg', 'gallery_33.jpg', 'gallery_34.jpg', 'gallery_35.jpg', 'gallery_36.jpg',
-        'gallery_03.jpg', 'gallery_04.jpg', 'gallery_05.jpg',
+        'gallery_21.jpg', 'gallery_22.jpg', { name: 'gallery_23.jpg', position: 'top' }, { name: 'gallery_24.jpg', position: 'bottom' }, { name: 'gallery_25.jpg', position: 'bottom' },
+        { name: 'gallery_26.jpg', position: 'bottom' },
+        'gallery_17.jpg', 'gallery_18.jpg', 'gallery_19.jpg',
+        'gallery_31.jpg', 'gallery_33.jpg', 'gallery_34.jpg', 'gallery_35.jpg', { name: 'gallery_36.jpg', position: 'top' },
+        { name: 'gallery_03.jpg', position: 'top' },
+        'gallery_04.jpg', 'gallery_05.jpg',
         'gallery_27.jpg',
-        'gallery_30.jpg',
+        { name: 'gallery_30.jpg', position: 'left 25%' },
     ];
 
-    // 모바일에 최적화된 gallery-sm 폴더 경로를 붙여 배열로 반환
+    // 예시: ['01.jpg', { name: '02.jpg', position: 'top' }]
+    // position 값은 CSS의 object-position 속성과 동일하게 적용됩니다. (top, bottom, center, 20% 30% 등)
+    // 모바일에 최적화된 gallery-sm 폴더 경로를 붙여 객체 배열로 반환
     const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-    return fileNames.map(fileName => {
+    return fileNames.map(item => {
+        const fileName = typeof item === 'string' ? item : item.name;
+        const position = typeof item === 'string' ? 'center' : (item.position || 'center');
+
         const cleanPath = `gallery-sm/${fileName.replace(/^\/+/, '')}`;
-        return encodeURI(`${baseUrl}/${cleanPath}`);
+        return {
+            url: encodeURI(`${baseUrl}/${cleanPath}`),
+            position: position
+        };
     });
 }
