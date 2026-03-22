@@ -11,10 +11,11 @@ export default function Gallery({ onLoadComplete }) {
 
     // 동기식 이미지 로딩
     const [images] = useState(() =>
-        getGithubGalleryImages().map(url => ({ 
-            path: url, 
-            signedUrl: url,
-            originalUrl: url.replace('/gallery-sm/', '/gallery/')
+        getGithubGalleryImages().map(img => ({
+            path: img.url,
+            signedUrl: img.url,
+            originalUrl: img.url.replace('/gallery-sm/', '/gallery/'),
+            position: img.position
         }))
     );
     const [visibleCount, setVisibleCount] = useState(12);
@@ -136,7 +137,7 @@ export default function Gallery({ onLoadComplete }) {
 
     // UI --------------------------------------------------------------------------------
     return (
-        <section ref={ref} id="gallery" className="py-16 sm:py-24 container mx-auto px-4">
+        <section ref={ref} id="gallery" className="py-8 sm:py-12 container mx-auto px-4">
             {/* 타이틀 */}
             <div
                 className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
@@ -156,19 +157,20 @@ export default function Gallery({ onLoadComplete }) {
             {/* 썸네일 그리드 */}
             {!loading && !loadError && (
                 <>
-                    <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {images.slice(0, visibleCount).map(({ path, signedUrl }, idx) => (
+                    <div className="mt-8 flex flex-wrap justify-center gap-3">
+                        {images.slice(0, visibleCount).map(({ path, signedUrl, position }, idx) => (
                             <button
                                 type="button"
                                 key={path}
-                                className="group relative overflow-hidden rounded-2xl border"
+                                className="group relative overflow-hidden rounded-2xl border w-[208px] h-[208px] shrink-0"
                                 onClick={() => openModal(idx)}
                                 aria-label={`이미지 ${idx + 1} 확대 보기`}
                             >
                                 <img
                                     src={signedUrl}
                                     alt={`gallery-${idx + 1}`}
-                                    className="w-full h-40 md:h-44 object-cover group-hover:scale-[1.03] transition"
+                                    className="w-full h-full object-cover group-hover:scale-[1.03] transition"
+                                    style={{ objectPosition: position }}
                                     draggable={false}
                                     loading="lazy"
                                     decoding="async"
