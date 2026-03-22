@@ -24,15 +24,21 @@ export function getGithubGalleryImages() {
     // TODO: 여기에 실제 갤러리 이미지 파일명들을 직접 입력해주세요.
     // 예: ['01.jpg', '02.jpg']
     const fileNames = [
-        // '01.jpg',
-        // '02.jpg',
+        'gallery_01.jpg', 'gallery_02.jpg', 'gallery_03.jpg', 'gallery_04.jpg', 'gallery_05.jpg',
+        'gallery_06.jpg', 'gallery_07.jpg', 'gallery_08.jpg', 'gallery_09.jpg', 'gallery_10.jpg',
+        'gallery_11.jpg', 'gallery_12.jpg', 'gallery_13.jpg', 'gallery_14.jpg', 'gallery_15.jpg',
+        'gallery_16.jpg', 'gallery_17.jpg', 'gallery_18.jpg', 'gallery_19.jpg', 'gallery_20.jpg',
+        'gallery_21.jpg', 'gallery_22.jpg', 'gallery_23.jpg', 'gallery_24.jpg', 'gallery_25.jpg',
+        'gallery_26.jpg', 'gallery_27.jpg', 'gallery_28.jpg', 'gallery_29.jpg', 'gallery_30.jpg',
+        'gallery_31.jpg', 'gallery_32.jpg', 'gallery_33.jpg', 'gallery_34.jpg', 'gallery_35.jpg',
+        'gallery_36.jpg', 'gallery_37.jpg'
     ];
 
     // mobile-img/gallery/ 경로를 붙여 배열로 반환
     const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     return fileNames.map(fileName => {
-        const cleanPath = `mobile-img/gallery/${fileName.replace(/^\/+/, '')}`;
-        return `${baseUrl}/${cleanPath}`;
+        const cleanPath = `gallery/${fileName.replace(/^\/+/, '')}`;
+        return encodeURI(`${baseUrl}/${cleanPath}`);
     });
 }
