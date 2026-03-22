@@ -185,65 +185,60 @@ export default function Gallery({ onLoadComplete }) {
                 <div
                     role="dialog"
                     aria-modal="true"
-                    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+                    className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center select-none"
                     onClick={closeModal}
                 >
-                    {/* 닫기 버튼 (항상 보임, 노치 대응) */}
+                    {/* 닫기 버튼 (우측 상단 완전히 고정) */}
                     <button
                         type="button"
                         aria-label="닫기"
                         onClick={closeModal}
-                        className="fixed z-[60] h-10 w-10 rounded-full bg-black/55 hover:bg-black/65 text-white backdrop-blur ring-1 ring-white/30 focus:outline-none focus:ring-2 focus:ring-white/70 flex items-center justify-center"
+                        className="fixed z-[60] h-11 w-11 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur flex items-center justify-center transition"
                         style={{
-                            top: "max(1rem, env(safe-area-inset-top))",
-                            right: "max(1rem, env(safe-area-inset-right))",
-                            filter: "drop-shadow(0 2px 4px rgba(0,0,0,.6))",
+                            top: "max(1.5rem, env(safe-area-inset-top))",
+                            right: "max(1.5rem, env(safe-area-inset-right))",
                         }}
                     >
                         <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
-                            <path
-                                fill="currentColor"
-                                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                            />
+                            <path fill="currentColor" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                         </svg>
                     </button>
 
+                    {/* 사진과 버튼을 담는 전체화면 고정 래퍼 */}
                     <div
-                        className="relative select-none"
+                        className="relative w-full h-[100dvh] flex items-center justify-center max-w-7xl mx-auto"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* 확대 이미지 (뷰포트 기준 최대 80%) */}
+                        {/* ◀ 이전 버튼 (화면 왼쪽 끝에 완전히 고정) */}
+                        <button
+                            type="button"
+                            aria-label="이전 이미지"
+                            onClick={prev}
+                            className="absolute left-4 sm:left-8 z-[60] h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur flex items-center justify-center transition"
+                        >
+                            <svg viewBox="0 0 24 24" className="w-7 h-7" aria-hidden="true">
+                                <path fill="currentColor" d="M15.41 7.41 14 6 8 12l6 6 1.41-1.41L10.83 12z" />
+                            </svg>
+                        </button>
+
+                        {/* 확대 이미지 (비율 유지하며 고정된 영역 안에서 제일 크게) */}
                         <img
                             src={images[activeIndex].signedUrl}
                             alt={`gallery-large-${activeIndex + 1}`}
-                            className="rounded-xl shadow-2xl object-contain"
-                            style={{ maxWidth: "80vw", maxHeight: "80vh" }}
+                            className="w-full h-full object-contain p-2 sm:p-12"
                             draggable={false}
                             onTouchStart={onTouchStart}
                             onTouchEnd={onTouchEnd}
                         />
 
-                        {/* ◀ 이전 / ▶ 다음 버튼 (화이트 이미지 대비 강화) */}
-                        <button
-                            type="button"
-                            aria-label="이전 이미지"
-                            onClick={prev}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-black/15 hover:bg-black/25 text-white backdrop-blur ring-1 ring-white/30 focus:outline-none focus:ring-2 focus:ring-white/70 flex items-center justify-center"
-                            style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,.7))" }}
-                        >
-                            <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
-                                <path fill="currentColor" d="M15.41 7.41 14 6 8 12l6 6 1.41-1.41L10.83 12z" />
-                            </svg>
-                        </button>
-
+                        {/* ▶ 다음 버튼 (화면 오른쪽 끝에 완전히 고정) */}
                         <button
                             type="button"
                             aria-label="다음 이미지"
                             onClick={next}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-black/15 hover:bg-black/25 text-white backdrop-blur ring-1 ring-white/30 focus:outline-none focus:ring-2 focus:ring-white/70 flex items-center justify-center"
-                            style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,.7))" }}
+                            className="absolute right-4 sm:right-8 z-[60] h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur flex items-center justify-center transition"
                         >
-                            <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" className="w-7 h-7" aria-hidden="true">
                                 <path fill="currentColor" d="m10 6-1.41 1.41L13.17 12l-4.58 4.59L10 18l6-6z" />
                             </svg>
                         </button>
