@@ -157,12 +157,12 @@ export default function Gallery({ onLoadComplete }) {
             {/* 썸네일 그리드 */}
             {!loading && !loadError && (
                 <>
-                    <div className="mt-8 flex flex-wrap justify-center gap-3">
+                    <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
                         {images.slice(0, visibleCount).map(({ path, signedUrl, position }, idx) => (
                             <button
                                 type="button"
                                 key={path}
-                                className="group relative overflow-hidden rounded-2xl border w-[208px] h-[208px] shrink-0"
+                                className="group relative overflow-hidden rounded-2xl border aspect-square w-full"
                                 onClick={() => openModal(idx)}
                                 aria-label={`이미지 ${idx + 1} 확대 보기`}
                             >
