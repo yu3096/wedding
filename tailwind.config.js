@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['"Noto Serif KR"', 'serif'],
+        serif: ['Pretendard', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         sans: ['Pretendard', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },

@@ -50,7 +50,9 @@ export default function Appreciation() {
 
           {/* 포인트 라인 */}
           <p className="mt-4 text-[15px] sm:text-base leading-relaxed">
-            오늘의 소중한 순간이 여러분의 마음 속에도 아름답게 남기를 바랍니다.
+            오늘의 소중한 순간이 여러분의 마음 속에도
+            <br />
+            아름답게 남기를 바랍니다.
           </p>
 
         </div>
