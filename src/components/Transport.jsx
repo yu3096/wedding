@@ -37,11 +37,10 @@ export default function Transport() {
             <p className="text-sm text-neutral-600 mt-1">
               {wedding.weddingCar.split("<br>").map((line, idx) => (
                 <React.Fragment key={idx}>
-                    {idx === 0 && <>네비게이션 주소검색 {line}</>}
-                    {idx !== 0 && <><span style={{color:"transparent"}}>네비게이션 주소검색</span> {line}</>}
-                    <br />
-                  </React.Fragment>
-             ))}
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </p>
           </div>
           <div className="rounded-2xl border p-5 bg-white">

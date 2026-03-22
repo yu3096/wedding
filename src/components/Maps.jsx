@@ -25,11 +25,10 @@ export default function Maps() {
     return (
         <section ref={ref} id="maps" className="py-16 sm:py-24 bg-neutral-50">
             <div
-                className={`container mx-auto px-4 transition-all duration-700 ${
-                    visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-                }`}
+                className={`container mx-auto px-4 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                    }`}
             >
-                <h2 className="text-center font-serif text-3xl sm:text-4xl">오시는길</h2>
+                <h2 className="text-center text-3xl sm:text-4xl">오시는 길</h2>
 
                 {/* 카드: 고정 높이 제거 → 내용에 따라 자동 확장 */}
                 <div className="max-w-5xl w-full mx-auto mt-6 rounded-2xl overflow-hidden border bg-white shadow-sm">

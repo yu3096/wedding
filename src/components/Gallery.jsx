@@ -11,7 +11,11 @@ export default function Gallery({ onLoadComplete }) {
 
     // 동기식 이미지 로딩
     const [images] = useState(() =>
-        getGithubGalleryImages().map(url => ({ path: url, signedUrl: url }))
+        getGithubGalleryImages().map(url => ({ 
+            path: url, 
+            signedUrl: url,
+            originalUrl: url.replace('/gallery-sm/', '/gallery/')
+        }))
     );
     const [visibleCount, setVisibleCount] = useState(12);
 
@@ -138,10 +142,7 @@ export default function Gallery({ onLoadComplete }) {
                 className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                     }`}
             >
-                <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">우리의 순간</p>
-                <h2 className="mt-2 font-serif text-3xl sm:text-4xl">
-                    사진을 터치하시면 더 큰 이미지로<br />감상하실 수 있어요.
-                </h2>
+                <p className="uppercase tracking-[0.3em] text-sm text-neutral-500">사진을 터치하시면 더 큰 이미지로<br />감상하실 수 있어요.</p>
             </div>
 
             {/* 상태 표시 */}
@@ -244,7 +245,7 @@ export default function Gallery({ onLoadComplete }) {
 
                         {/* 확대 이미지 (비율 유지하며 고정된 영역 안에서 제일 크게) */}
                         <img
-                            src={images[activeIndex].signedUrl}
+                            src={images[activeIndex].originalUrl}
                             alt={`gallery-large-${activeIndex + 1}`}
                             className="w-full h-full object-contain p-2 sm:p-12"
                             draggable={false}
