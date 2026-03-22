@@ -13,6 +13,8 @@ export default function Gallery({ onLoadComplete }) {
     const [images] = useState(() =>
         getGithubGalleryImages().map(url => ({ path: url, signedUrl: url }))
     );
+    const [visibleCount, setVisibleCount] = useState(12);
+
     const loading = false;
     const loadError = null;
 
@@ -152,32 +154,51 @@ export default function Gallery({ onLoadComplete }) {
 
             {/* 썸네일 그리드 */}
             {!loading && !loadError && (
-                <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {images.map(({ path, signedUrl }, idx) => (
-                        <button
-                            type="button"
-                            key={path}
-                            className="group relative overflow-hidden rounded-2xl border"
-                            onClick={() => openModal(idx)}
-                            aria-label={`이미지 ${idx + 1} 확대 보기`}
-                        >
-                            <img
-                                src={signedUrl}
-                                alt={`gallery-${idx + 1}`}
-                                className="w-full h-40 md:h-44 object-cover group-hover:scale-[1.03] transition"
-                                draggable={false}
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        </button>
-                    ))}
+                <>
+                    <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {images.slice(0, visibleCount).map(({ path, signedUrl }, idx) => (
+                            <button
+                                type="button"
+                                key={path}
+                                className="group relative overflow-hidden rounded-2xl border"
+                                onClick={() => openModal(idx)}
+                                aria-label={`이미지 ${idx + 1} 확대 보기`}
+                            >
+                                <img
+                                    src={signedUrl}
+                                    alt={`gallery-${idx + 1}`}
+                                    className="w-full h-40 md:h-44 object-cover group-hover:scale-[1.03] transition"
+                                    draggable={false}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </button>
+                        ))}
 
-                    {images.length === 0 && (
-                        <div className="col-span-full text-center text-neutral-500">
-                            폴더에 표시할 이미지가 없습니다.
+                        {images.length === 0 && (
+                            <div className="col-span-full text-center text-neutral-500">
+                                폴더에 표시할 이미지가 없습니다.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* 더 보기 버튼 */}
+                    {visibleCount < images.length && (
+                        <div className="mt-10 flex justify-center">
+                            <button
+                                type="button"
+                                onClick={() => setVisibleCount((prev) => prev + 12)}
+                                className="group px-8 py-3 rounded-full border border-neutral-200 bg-white text-neutral-600 text-[15px] hover:bg-neutral-50 transition-all shadow-sm flex items-center gap-2"
+                            >
+                                <span>사진 더 보기</span>
+                                <span className="text-neutral-400 text-sm">({images.length - visibleCount}장 남음)</span>
+                                <svg className="w-5 h-5 text-neutral-400 group-hover:translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
                         </div>
                     )}
-                </div>
+                </>
             )}
 
             {/* 모달 */}
