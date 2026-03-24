@@ -69,6 +69,10 @@ export default function FloatingShareButton() {
             fallbackToSMS();
             return;
         }
+        
+        // 파라미터를 제외한 순수 URL 추출
+        const shareUrl = window.location.origin + window.location.pathname;
+
         try {
             window.Kakao.Share.sendDefault({
                 objectType: "feed",
@@ -77,16 +81,16 @@ export default function FloatingShareButton() {
                     description: `${wedding.weddingDate} ${wedding.weddingTime} | ${wedding.weddingHall}`,
                     imageUrl: images.thumbnail,
                     link: {
-                        mobileWebUrl: window.location.href,
-                        webUrl: window.location.href,
+                        mobileWebUrl: shareUrl,
+                        webUrl: shareUrl,
                     },
                 },
                 buttons: [
                     {
                         title: "청첩장 보기",
                         link: {
-                            mobileWebUrl: window.location.href,
-                            webUrl: window.location.href,
+                            mobileWebUrl: shareUrl,
+                            webUrl: shareUrl,
                         },
                     },
                 ],
@@ -100,14 +104,16 @@ export default function FloatingShareButton() {
 
     // 4. 라인 공유 로직
     const shareToLine = () => {
-        const url = encodeURIComponent(window.location.href);
+        const shareUrl = window.location.origin + window.location.pathname;
+        const url = encodeURIComponent(shareUrl);
         const text = encodeURIComponent("저희 결혼식에 초대합니다 💍\n청첩장을 확인해보세요!");
         window.open(`https://line.me/R/msg/text/?${text}%0A${url}`, '_blank');
         setIsOpen(false);
     };
 
     const fallbackToSMS = () => {
-        const text = `저희 결혼식에 초대합니다 💍\n청첩장을 확인해보세요!\n${window.location.href}`;
+        const shareUrl = window.location.origin + window.location.pathname;
+        const text = `저희 결혼식에 초대합니다 💍\n청첩장을 확인해보세요!\n${shareUrl}`;
         window.location.href = `sms:?body=${encodeURIComponent(text)}`;
     };
 
