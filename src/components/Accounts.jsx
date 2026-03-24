@@ -113,7 +113,7 @@ export default function Accounts() {
             return (
               <article
                 key={g.side}
-                className="rounded-2xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden ring-1 ring-black/5"
+                className={`rounded-2xl border ${t.border} bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden`}
               >
                 <div
                   className={`h-16 sm:h-18 flex items-center justify-between px-4 sm:px-5
@@ -152,7 +152,7 @@ export default function Accounts() {
               }}
             >
               <div
-                className={`w-full sm:w-[560px] max-w-[92vw] max-h-[90vh] overflow-y-auto overscroll-contain bg-white rounded-2xl border shadow-xl
+                className={`w-full sm:w-[560px] max-w-[92vw] max-h-[90vh] overflow-y-auto overscroll-contain bg-white rounded-2xl border ${theme.border} shadow-xl
                             transition-all duration-200
                             ${animVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"} ${theme.ring}`}
               >
