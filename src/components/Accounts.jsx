@@ -190,7 +190,7 @@ export default function Accounts() {
                               </span>
                             )}
                             <CopyButton
-                              text={`${acc.bank} ${acc.account} ${acc.name}`}
+                              text={`${acc.account}`}
                               label="복사하기"
                               successLabel="복사완료"
                               onCopied={() =>
