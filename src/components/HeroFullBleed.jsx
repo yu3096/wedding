@@ -22,7 +22,7 @@ export default function HeroFullBleed(props) {
     // ⬇️ 최소 유지 시간 보장 (예: 2500ms)
     const [isMinTimePassed, setIsMinTimePassed] = useState(false);
     useEffect(() => {
-        const timer = setTimeout(() => setIsMinTimePassed(true), 2500);
+        const timer = setTimeout(() => setIsMinTimePassed(true), 1000);
         return () => clearTimeout(timer);
     }, []);
 
@@ -104,7 +104,7 @@ export default function HeroFullBleed(props) {
 
                     <SvgStaggerText
                         x="50%" y="45%"
-                        text={`${names.groomName} & ${names.brideName}`}
+                        text={`${names.brideName} & ${names.groomName}`}
                         step={200}
                         className="fill-white calligraphy"
                         style={{ filter: "url(#shadow)", fontSize: "clamp(36px, 15vw, 88px)" }}
