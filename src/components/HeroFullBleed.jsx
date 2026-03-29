@@ -49,10 +49,12 @@ export default function HeroFullBleed(props) {
     }, [showMainContent, props.onIntroComplete]);
 
     return (
-        <section id="heroFullBleed" className="hero-fullbleed relative bg-black overflow-hidden">
-            {/* 배경 이미지 (로딩 완료 시 페이드인) */}
+        <section id="heroFullBleed" className="hero-fullbleed relative bg-white overflow-hidden">
+            {/* 메인 배경 이미지 (꽉 채움)
+                - 사용자가 위치(focus)를 조절하려면 object-cover 뒤에 object-top, object-center 등을 추가/수정하세요.
+            */}
             <ResponsivePicture
-                picture={objectUrl || ""}                  // Blob URL 전달
+                picture={objectUrl || ""}
                 alt="Hero background"
                 sizes="100vw"
                 fetchPriority="high"
@@ -65,13 +67,6 @@ export default function HeroFullBleed(props) {
                 }
                 fit="cover"
             />
-
-            {/* 진행 바 오버레이: Intro가 로딩바 역할을 하므로 제거함 */}
-            {/* {allConditionsMet ? null : (
-                !isLoaded && signedUrl ? <ProgressOverlay percent={percent} mode={mode} /> : null
-            )} */}
-
-            <div className="absolute inset-0 bg-black/30" />
 
             {/* ⬇️ Font Preloader: Force load font during Intro */}
             <div className="opacity-0 pointer-events-none absolute calligraphy" aria-hidden="true">.</div>
@@ -86,6 +81,7 @@ export default function HeroFullBleed(props) {
                     preserveAspectRatio="xMidYMid slice"
                     aria-hidden="true"
                 >
+                    {/*}
                     <defs>
                         <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
                             <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.4" />
@@ -115,13 +111,11 @@ export default function HeroFullBleed(props) {
                         className="fill-white/95 calligraphy"
                         style={{ filter: "url(#shadow)", fontSize: "clamp(14px, 8vw, 24px)" }}
                     />
+                    */}
                 </svg>
             )}
 
-            <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/90 transition-opacity duration-700 delay-1000 ${showMainContent ? 'opacity-100' : 'opacity-0'}`}>
-                <span className="text-sm">Scroll</span>
-                <span className="block w-[1px] h-10 bg-white/80 animate-pulse" />
-            </div>
+            <div className={`absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/90 transition-opacity duration-700 delay-1000 ${showMainContent ? 'opacity-100' : 'opacity-0'}`}></div>
         </section>
     );
 }
