@@ -74,12 +74,18 @@ export default function FloatingShareButton() {
         // 파라미터를 제외한 순수 URL 추출
         const shareUrl = window.location.origin + window.location.pathname;
 
+        // "YYYY-MM-DD" 형식을 "YYYY년 MM월 DD일" 형태로 변환
+        const dateParts = wedding.weddingDate ? wedding.weddingDate.split('-') : [];
+        const formattedDate = dateParts.length === 3
+            ? `${dateParts[0]}년 ${dateParts[1]}월 ${dateParts[2]}일`
+            : wedding.weddingDate;
+
         try {
             window.Kakao.Share.sendDefault({
                 objectType: "feed",
                 content: {
                     title: `${names.groomName} ❤️ ${names.brideName} 결혼합니다`,
-                    description: `${wedding.weddingDate} ${wedding.weddingTime} | ${wedding.weddingHall}`,
+                    description: `${formattedDate} ${wedding.weddingTime} | ${wedding.weddingHall}`,
                     imageUrl: getGithubImageUrl("mobile-img/Hero.jpg"),
                     link: {
                         mobileWebUrl: shareUrl,
