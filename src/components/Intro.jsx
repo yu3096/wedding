@@ -65,7 +65,7 @@ export default function Intro({ percent = 0, isOpen = true, wedding }) {
     }
 
     return (
-        <div className="absolute inset-0 w-full h-full z-10 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 w-full h-full z-10 flex items-center justify-center pointer-events-none bg-black">
             <svg
                 className="w-full h-full"
                 viewBox="0 0 1440 900"

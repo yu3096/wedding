@@ -49,32 +49,33 @@ export default function HeroFullBleed(props) {
     }, [showMainContent, props.onIntroComplete]);
 
     return (
-        <section id="heroFullBleed" className="hero-fullbleed relative bg-black overflow-hidden">
-            {/* 배경 이미지 (로딩 완료 시 페이드인) */}
-            <ResponsivePicture
-                picture={objectUrl || ""}                  // Blob URL 전달
-                alt="Hero background"
-                sizes="100vw"
-                fetchPriority="high"
-                loading="eager"
-                decoding="async"
-                className="absolute inset-0"
-                imgClassName={
-                    "w-full h-full object-cover block transition-opacity duration-700 " +
-                    (showMainContent ? "opacity-100" : "opacity-0")
-                }
-                fit="cover"
-            />
+        <section id="heroFullBleed" className="hero-fullbleed relative bg-white overflow-hidden">
+            {/* 메인 배경 이미지 (꽉 채움)
+                - 사용자가 위치(focus)를 조절하려면 object-cover 뒤에 object-top, object-center 등을 추가/수정하세요.
+            */}
+            {/* ⬇️ 이미지와 그라데이션이 항상 같은 바닥선(bottom)을 공유하며 한 몸처럼 움직이게 하는 그룹 컨테이너. */}
+            {/* 위치나 여백을 변경하시려면 이 div의 'bottom-20' 부분만 수정하시면 둘 다 같이 움직입니다. */}
+            <div className="absolute inset-x-0 top-0 bottom-20">
 
-            {/* 진행 바 오버레이: Intro가 로딩바 역할을 하므로 제거함 */}
-            {/* {allConditionsMet ? null : (
-                !isLoaded && signedUrl ? <ProgressOverlay percent={percent} mode={mode} /> : null
-            )} */}
+                <ResponsivePicture
+                    picture={objectUrl || ""}
+                    alt="Hero background"
+                    sizes="100vw"
+                    fetchPriority="high"
+                    loading="eager"
+                    decoding="async"
+                    className="w-full h-full relative"
+                    imgClassName={
+                        "w-full h-full object-cover block transition-opacity duration-700 " +
+                        (showMainContent ? "opacity-100" : "opacity-0")
+                    }
+                    fit="cover"
+                />
 
-            <div className="absolute inset-0 bg-black/30" />
+                {/* ⬇️ 이미지 하단부 단절을 감춰주며, 아래로 내려갈수록 100% 완전한 흰색으로 끝나는(to-white) 자연스러운 페이드 덮개 */}
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-white/0 via-white/40 to-white pointer-events-none z-10" aria-hidden="true" />
 
-            {/* ⬇️ Font Preloader: Force load font during Intro */}
-            <div className="opacity-0 pointer-events-none absolute calligraphy" aria-hidden="true">.</div>
+            </div>
 
             {/* ⬇️ Render Intro OR Main Content */}
             {!showMainContent ? (
@@ -86,6 +87,7 @@ export default function HeroFullBleed(props) {
                     preserveAspectRatio="xMidYMid slice"
                     aria-hidden="true"
                 >
+                    {/*}
                     <defs>
                         <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
                             <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.4" />
@@ -115,12 +117,13 @@ export default function HeroFullBleed(props) {
                         className="fill-white/95 calligraphy"
                         style={{ filter: "url(#shadow)", fontSize: "clamp(14px, 8vw, 24px)" }}
                     />
+                    */}
                 </svg>
             )}
 
-            <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/90 transition-opacity duration-700 delay-1000 ${showMainContent ? 'opacity-100' : 'opacity-0'}`}>
-                <span className="text-sm">Scroll</span>
-                <span className="block w-[1px] h-10 bg-white/80 animate-pulse" />
+            <div className={`absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-black/40 transition-opacity duration-700 delay-1000 ${showMainContent ? 'opacity-100' : 'opacity-0'}`}>
+                <span className="text-sm tracking-widest">Scroll</span>
+                <span className="block w-[1px] h-3 bg-black/50 animate-pulse" />
             </div>
         </section>
     );
