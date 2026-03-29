@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useWeddingInfo } from "@/context/WeddingInfoProvider.jsx";
+import { getGithubImageUrl } from "@/lib/github-storage.js";
 
 function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
 
@@ -69,7 +70,7 @@ export default function FloatingShareButton() {
             fallbackToSMS();
             return;
         }
-        
+
         // 파라미터를 제외한 순수 URL 추출
         const shareUrl = window.location.origin + window.location.pathname;
 
@@ -79,7 +80,7 @@ export default function FloatingShareButton() {
                 content: {
                     title: `${names.groomName} ❤️ ${names.brideName} 결혼합니다`,
                     description: `${wedding.weddingDate} ${wedding.weddingTime} | ${wedding.weddingHall}`,
-                    imageUrl: images.thumbnail,
+                    imageUrl: getGithubImageUrl("mobile-img/Hero.jpg"),
                     link: {
                         mobileWebUrl: shareUrl,
                         webUrl: shareUrl,
